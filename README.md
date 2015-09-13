@@ -1,4 +1,4 @@
-# Node.js Database Abstraction Layer (node-dal)
+# Node.js Database Abstraction Layer
 
 This is yet another database abstraction layer. 
 
@@ -22,7 +22,14 @@ This library is not:
 
 ## Documentation
 
-### initialization
+### Instalation
+
+```bash
+npm install --save node-dal
+npm install --save oracledb
+```
+
+### Initialization
 
 ```js
 var dalFactory = require('node-dal'),
@@ -98,9 +105,7 @@ dal.querySql('SELECT ...', [15], callback);
 ---
 
 <a name="selectOneRow" />
-**selectOneRow(tbl:string, [fields:Array|null], where:Array, [opt:object|null], cb:function)**
-
-see params details: [`fields`](#params-fields) [`where`](#params-where) [`opt`](#params-opt)
+**selectOneRow**  tbl:string, [`[fields:Array|null]`](#params-fields), [`where:Array`](#params-where), [`[opt:object|null]`](#params-opt), cb:function
 
 Fetch only one record (row) from table or view.
 Request have to return max one record otherwise error will be thrown.
@@ -110,7 +115,7 @@ Example:
 ```js
 dal.selectOneRow('test_01', null, ['id = ?', 10], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     cb(null, result);
@@ -131,7 +136,7 @@ Pobiera pojedynczy rekord z tabeli/widoku
 ```js
 dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     cb(null, result);
@@ -152,7 +157,7 @@ Pobiera pojedynczą wartość z konkretnego pla tabeli/widoku
 ```js
 dal.selectOneValue('test_01', 'text',  ['id = ?', 10], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     cb(null, result);
@@ -173,7 +178,7 @@ Pobiera pojedynczą wartość z konkretnego pla tabeli/widoku
 ```js
 dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     cb(null, result);
@@ -193,7 +198,7 @@ Only for Oracle driver.
 ```js
 dal.selectClobValueSql('SELECT text_clob FROM test_01 WHERE id=:0', [10], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     cb(null, result);
@@ -211,7 +216,7 @@ see params details: [`fields`](#params-fields) [`where`](#params-where) [`order`
 ```js
 dal.selectAllRows('test_01', null, null, null, {outFormat: 'array', limit:10, page:5}, function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -230,7 +235,7 @@ see params details: [`opt`](#params-opt)
 ```js
 dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'], function(err, results) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -268,7 +273,7 @@ var bindvars = {
 }
 dal.runProcedure('procedure01', bindvars, function(err, results) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -287,7 +292,7 @@ see params details: [`data`](#params-data)
 ```js
 dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -308,7 +313,7 @@ Wykonuje polecenie insert pobierając wcześniej ID z sekwencji i zwraca to ID (
 ```js
 dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -327,7 +332,7 @@ Wykonuje polecenie insert pobierając wcześniej ID z sekwencji i zwraca to ID (
 ```js
 dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null,'test10'], 'test_01_sid', function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -348,7 +353,7 @@ Wykonuje UPDATE na zadanej tabelce wg zadanych warunków (wersja no SQL)
 ```js
 dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -369,7 +374,7 @@ Usunięcie rekordu/rekordów
 ```js
 dal.del('test_01', ['id = ?', 999], function(err, result) {
     if(err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
     
@@ -411,20 +416,20 @@ dal.executeTransaction(sqlBindArray, function(err, results) {
 ```js
 dal.getDbConnection(function(err, connection){
     if (err) {
-        cb(new MyError(err));
+        cb(new Error(err));
         return;
     }
 
     connection.execute(sql, bind, {outFormat: dal.OBJECT}, function(err, result) {
         if (err) {
-            cb(new MyError(err, {sql: sql, bind: bind}));
+            cb(new Error(err));
             return;
         }
 
         /* Release the connection back to the connection pool */
         connection.release(function(err) {
             if (err) {
-                cb(new MyError(err));
+                cb(new Error(err));
                 return;
             }
             

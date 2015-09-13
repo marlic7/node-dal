@@ -4,21 +4,14 @@ This is yet another database abstraction layer.
 
 It purpose is to be:
 
-1. simple
-
-2. easy and elastic to use
-
-3. pool support with queue and parameterized timeout
-
-4. support pagination
-
-5. well parameterizable
-
-6. well tested
-
-7. well documented
-
-8. easy to extend (adapter writers very welcome)
+1. Simple
+2. Easy and elastic to use
+3. Pool support with queue and parameterized timeout
+4. Support pagination
+5. Well parameterizable
+6. Well tested
+7. Well documented
+8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
 * Oracle (oracledb driver)
@@ -105,7 +98,7 @@ dal.querySql('SELECT ...', [15], callback);
 ---
 
 <a name="selectOneRow" />
-<h4>selectOneRow(`tbl:string, [fields:Array|null], where:Array, [opt:object|null], cb:function`)</h4>
+**selectOneRow(tbl:string, [fields:Array|null], where:Array, [opt:object|null], cb:function)**
 
 see params details: [`fields`](#params-fields) [`where`](#params-where) [`opt`](#params-opt)
 
@@ -128,7 +121,7 @@ dal.selectOneRow('test_01', null, ['id = ?', 10], function(err, result) {
 ---
 
 <a name="selectOneRowSql" />
-<h4>selectOneRowSql(`sql:string, bind:object|Array, [opt:object|null], cb:function`)</h4>
+**selectOneRowSql(sql:string, bind:object|Array, [opt:object|null], cb:function)**
 
 see params details: [`opt`](#params-opt)
 
@@ -149,7 +142,7 @@ dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], f
 ---
 
 <a name="selectOneValue" />
-<h4>selectOneValue(`tbl:string, field:string, where:Array|object, cb:function`)</h4>
+**selectOneValue(tbl:string, field:string, where:Array|object, cb:function)**
 
 see params details: [`where`](#params-where)
 
@@ -170,7 +163,7 @@ dal.selectOneValue('test_01', 'text',  ['id = ?', 10], function(err, result) {
 ---
 
 <a name="selectOneValueSql" />
-<h4>selectOneValueSql(`sql:string, bind:object|Array, [opt:object|null], cb:function`)</h4>
+**selectOneValueSql(sql:string, bind:object|Array, [opt:object|null], cb:function)**
 
 see params details: [`opt`](#params-opt)
 
@@ -191,7 +184,7 @@ dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10], function(err
 ---
 
 <a name="selectClobValueSql" />
-<h4>selectClobValueSql(`sql:string, bind:object|Array, [opt:object|null], cb:function`)</h4>
+**selectClobValueSql(sql:string, bind:object|Array, [opt:object|null], cb:function)**
 
 see params details: [`opt`](#params-opt)
 
@@ -211,7 +204,7 @@ dal.selectClobValueSql('SELECT text_clob FROM test_01 WHERE id=:0', [10], functi
 ---
 
 <a name="selectAllRows" />
-<h4>selectAllRows(`tbl:string, [fields:Array|null], [where:Array|object|null], [order:Array|string|null], [opt:object|null], cb:function`)</h4>
+**selectAllRows(tbl:string, [fields:Array|null], [where:Array|object|null], [order:Array|string|null], [opt:object|null], cb:function)**
 
 see params details: [`fields`](#params-fields) [`where`](#params-where) [`order`](#params-order) [`opt`](#params-opt)
 
@@ -230,7 +223,7 @@ dal.selectAllRows('test_01', null, null, null, {outFormat: 'array', limit:10, pa
 ---
 
 <a name="selectAllRowsSql" />
-<h4>selectAllRowsSql(`sql:string, bind:object|Array, [opt:object|null], cb:function`)</h4>
+**selectAllRowsSql(sql:string, bind:object|Array, [opt:object|null], cb:function)**
 
 see params details: [`opt`](#params-opt)
 
@@ -249,7 +242,7 @@ dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T']
 ---
 
 <a name="querySql" />
-<h4>querySql(`sql:string, [bind:object|Array], [opt:object|null], cb:function`)</h4>
+**querySql(sql:string, [bind:object|Array], [opt:object|null], cb:function)**
 
 see params details: [`opt`](#params-opt)
 
@@ -263,7 +256,7 @@ dal.querySql('DROP TABLE test_01', [], done);
 ---
 
 <a name="runProcedure" />
-<h4>runProcedure(`procName:string, bind:object|Array, cb:function`)</h4>
+**runProcedure(procName:string, bind:object|Array, cb:function)**
 
 Uruchamia procedurę PL/SQL
 
@@ -287,7 +280,7 @@ dal.runProcedure('procedure01', bindvars, function(err, results) {
 ---
 
 <a name="insert" />
-<h4>insert(`tbl:string, data:object, cb:function`)</h4>
+**insert(tbl:string, data:object, cb:function)**
 
 see params details: [`data`](#params-data)
 
@@ -306,7 +299,7 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
 ---
 
 <a name="insertReturningId" />
-<h4>insertReturningId(`tbl:string, data:object, seqence:string, cb:function`)</h4>
+**insertReturningId(tbl:string, data:object, seqence:string, cb:function)**
 
 see params details: [`data`](#params-data)
 
@@ -327,7 +320,7 @@ dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', func
 ---
 
 <a name="insertReturningIdSql" />
-<h4>insertReturningIdSql(`sql:string, bind:object|Array, seqence:string, cb:function`)</h4>
+**insertReturningIdSql(sql:string, bind:object|Array, seqence:string, cb:function)**
 
 Wykonuje polecenie insert pobierając wcześniej ID z sekwencji i zwraca to ID (wersja SQL)
 
@@ -346,7 +339,7 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null
 ---
 
 <a name="update" />
-<h4>update(`tbl:string, data:object, where:Array|object, cb:function`)</h4>
+**update(tbl:string, data:object, where:Array|object, cb:function)**
 
 see params details: [`where`](#params-where) [`data`](#params-data)
 
@@ -367,7 +360,7 @@ dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, r
 ---
 
 <a name="del" />
-<h4>del(`tbl:string, where:Array|object, cb:function`)</h4>
+**del(tbl:string, where:Array|object, cb:function)**
 
 see params details: [`where`](#params-where)
 
@@ -388,7 +381,7 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
 ---
 
 <a name="executeTransaction" />
-<h4>executeTransaction(`sqlBindArray:Array, cb:function`)</h4>
+**executeTransaction(sqlBindArray:Array, cb:function)**
 
 ```js
 var sqlBindArray = [
@@ -413,7 +406,7 @@ dal.executeTransaction(sqlBindArray, function(err, results) {
 ---
 
 <a name="getDbConnection" />
-<h4>getDbConnection(`cb:function, [probes:number], [waitTime:number]`)</h4>
+**getDbConnection(cb:function, [probes:number], [waitTime:number])**
 
 ```js
 dal.getDbConnection(function(err, connection){
@@ -445,7 +438,7 @@ dal.getDbConnection(function(err, connection){
 ---
 
 <a name="getDbPool" />
-<h4>getDbPool()</h4>
+**getDbPool()**
 
 Get orgin connection pool (one from driver or generic pool if driver hasn't pool').
 
@@ -457,7 +450,7 @@ var dbPool = dal.getDbPool();
 ---
 
 <a name="getDriver" />
-<h4>getDriver()</h4>
+**getDriver()**
 
 Get raw db driver object.
 
@@ -473,7 +466,7 @@ var driver = dal.getDriver();
 
 
 <a name="params-fields" />
-<h4>fields</h4>
+####fields
 
 selected fields:
 ```js
@@ -494,7 +487,7 @@ only one field:
 ---
 
 <a name="params-where" />
-<h4>where</h4>
+####where
 
 as a array:
 ```js
@@ -522,7 +515,7 @@ as a object (only AND clouse and equity (=) operator):
 ---
 
 <a name="params-data" />
-<h4>data</h4>
+####data
 
 ```js
 var data = {
@@ -538,7 +531,7 @@ var data = {
 ---
 
 <a name="params-order" />
-<h4>order</h4>
+####order
 
 ```js
 var order_v1 = ['field1', ['field2', 'DESC']]
@@ -548,7 +541,7 @@ var order_v2 = ['field1', 'field2 DESC']
 
 
 <a name="params-opt" />
-<h4>opt</h4>
+####opt
 
 
 ```js

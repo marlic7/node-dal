@@ -1,0 +1,40 @@
+{
+  "name": "node-dal",
+  "version": "1.0.0",
+  "description": "Node.js Database Abstraction Layer",
+  "main": "lib/dalFactory.js",
+  "scripts": {
+    "test": "mocha ./tests/ --reporter=spec --timeout 150000",
+    "testperf": "mocha ./tests/perf/ --reporter=spec --timeout 150000"
+  },
+  "author": "Mariusz Lichota",
+  "license": "MIT",
+  "keywords": [
+    "sql",
+    "query",
+    "oracle",
+    "dbi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marlic7/node-dal.git"
+  },
+  "dependencies": {
+    "async": "0.9.0",
+    "semver": "4.3.1",
+    "findup-sync": "0.2.1",
+    "oracle-prepare-sql": "^1.0.0",
+    "underscore-mixins2": "^1.0.1"
+  },
+  "devDependencies": {
+    "oracledb": "1.1.0",
+    "fast-stats": "0.0.3",
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-jsdoc": "^0.5.8",
+    "grunt-markdown": "^0.7.0",
+    "load-grunt-tasks": "^3.1.0",
+    "node-string-pad": "0.0.4",
+    "time-grunt": "^1.1.0"
+  }
+}

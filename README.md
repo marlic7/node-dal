@@ -3,13 +3,21 @@
 This is yet another database abstraction layer. 
 
 It purpose is to be:
+
 1. simple
+
 2. easy and elastic to use
+
 3. pool support with queue and parameterized timeout
+
 4. support pagination
+
 5. well parameterizable
+
 6. well tested
+
 7. well documented
+
 8. easy to extend (adapter writers very welcome)
 
 Supported databases:
@@ -498,7 +506,7 @@ as a array:
        nested: [
            ['field3 = ?', 5],
            ['field5 BETWEEN ? AND ?, [3, 4], 'OR']
-       ] // nested in "AND ()"
+       ]
    }
 ]
 ```

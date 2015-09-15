@@ -66,6 +66,18 @@ module.exports = {
 };
 ```
 
+### tests
+
+```bash
+npm test 
+npm run testperf
+```
+
+Library was successfuly tested with:
+DB: Oracle 11g XE, 11.2.0.3 EE
+Node.js: v0.10.38
+OS: Ubuntu 14.04, 14.10 and CentOS 6.6
+
 ## API
 
 **IMPORTANT!!!**
@@ -131,8 +143,8 @@ dal.selectOneRow('test_01', null, ['id = ?', 10], function(err, result) {
 
 see params details: [`opt`](#params-opt)
 
-Pobiera pojedynczy rekord z tabeli/widoku
-(zapytanie SQL musi zwrócić maksymalnie jeden rekord, inaczej będzie błąd)
+Fetch only one record (row) from table or view.
+Request have to return max one record otherwise error will be thrown.
 
 ```js
 dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], function(err, result) {
@@ -152,8 +164,8 @@ dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], f
 
 see params details: [`where`](#params-where)
 
-Pobiera pojedynczą wartość z konkretnego pla tabeli/widoku
-(zapytanie SQL musi zwrócić maksymalnie jeden rekord, inaczej będzie błąd)
+Fetch one value of specific field from table or view.
+Request have to return max one record otherwise error will be thrown.
 
 ```js
 dal.selectOneValue('test_01', 'text',  ['id = ?', 10], function(err, result) {
@@ -173,8 +185,8 @@ dal.selectOneValue('test_01', 'text',  ['id = ?', 10], function(err, result) {
 
 see params details: [`opt`](#params-opt)
 
-Pobiera pojedynczą wartość z konkretnego pla tabeli/widoku
-(zapytanie SQL musi zwrócić maksymalnie jeden rekord, inaczej będzie błąd)
+Fetch one value of specific field from table or view.
+Request have to return max one record otherwise error will be thrown.
 
 ```js
 dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10], function(err, result) {
@@ -252,7 +264,7 @@ dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T']
 
 see params details: [`opt`](#params-opt)
 
-Wywołanie na bazie poleceń typu: UPDATE, INSERT, DELETE, DROP, ALTER itp...
+Invoke SQL queries like: UPDATE, INSERT, DELETE, DROP, ALTER etc...
 
 ```js
 dal.querySql('DROP TABLE test_01', [], done);
@@ -264,7 +276,7 @@ dal.querySql('DROP TABLE test_01', [], done);
 <a name="runProcedure" />
 **runProcedure** (procName:string, bind:object|Array, cb:function)
 
-Uruchamia procedurę PL/SQL
+Invoke stored procedure.
 
 ```js
 var bindvars = {
@@ -309,7 +321,7 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
 
 see params details: [`data`](#params-data)
 
-Wykonuje polecenie insert pobierając wcześniej ID z sekwencji i zwraca to ID (wersja no SQL)
+Invoke INSERT operation with unique ID fetched from sequence and returns that ID (no SQL version).
 
 ```js
 dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', function(err, result) {
@@ -328,7 +340,7 @@ dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', func
 <a name="insertReturningIdSql" />
 **insertReturningIdSql** (sql:string, bind:object|Array, seqence:string, cb:function)
 
-Wykonuje polecenie insert pobierając wcześniej ID z sekwencji i zwraca to ID (wersja SQL)
+Invoke INSERT operation with unique ID fetched from sequence and returns that ID (SQL version).
 
 ```js
 dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null,'test10'], 'test_01_sid', function(err, result) {
@@ -349,8 +361,9 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null
 
 see params details: [`where`](#params-where) [`data`](#params-data)
 
-Wykonuje UPDATE na zadanej tabelce wg zadanych warunków (wersja no SQL)
-
+Invoke UPDATE on specified table. 
+Only fields in given data parameter object (simple key:value) will be modified for rows selected by given where parameter.
+ 
 ```js
 dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, result) {
     if(err) {
@@ -370,7 +383,7 @@ dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, r
 
 see params details: [`where`](#params-where)
 
-Usunięcie rekordu/rekordów
+Delete record or records.
 
 ```js
 dal.del('test_01', ['id = ?', 999], function(err, result) {
@@ -388,6 +401,9 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
 
 <a name="executeTransaction" />
 **executeTransaction**  (sqlBindArray:Array, cb:function)
+
+Execute simple transaction. 
+Either all queries from array will be succesful perform or none of them.
 
 ```js
 var sqlBindArray = [
@@ -413,6 +429,8 @@ dal.executeTransaction(sqlBindArray, function(err, results) {
 
 <a name="getDbConnection" />
 **getDbConnection**  (cb:function, [probes:number], [waitTime:number])
+
+Get connection from pool to perform operation using orgin db driver methods.
 
 ```js
 dal.getDbConnection(function(err, connection){
@@ -458,7 +476,7 @@ var dbPool = dal.getDbPool();
 <a name="getDriver" />
 **getDriver()**
 
-Get raw db driver object.
+Get orgin db driver object.
 
 ```js
 var driver = dal.getDriver();
@@ -472,7 +490,7 @@ var driver = dal.getDriver();
 
 
 <a name="params-fields" />
-####fields
+#### fields
 
 selected fields:
 ```js
@@ -493,7 +511,7 @@ only one field:
 ---
 
 <a name="params-where" />
-####where
+#### where
 
 as a array:
 ```js
@@ -521,7 +539,7 @@ as a object (only AND clouse and equity (=) operator):
 ---
 
 <a name="params-data" />
-####data
+#### data
 
 ```js
 var data = {
@@ -537,7 +555,7 @@ var data = {
 ---
 
 <a name="params-order" />
-####order
+#### order
 
 ```js
 var order_v1 = ['field1', ['field2', 'DESC']]
@@ -547,15 +565,15 @@ var order_v2 = ['field1', 'field2 DESC']
 
 
 <a name="params-opt" />
-####opt
+#### opt
 
 
 ```js
 var opt = {
-    outFormat: 'array', // wyniki są zwracane w tablicy zamiast jako obiekt z kluczami zgodnymi z nazwą pól
-    limit: 10,          // aktywuje stronicowanie i określa rozmiar strony, dodaje też do wyników pole n__ (lub ostatnie w tablicy) z numerem wiersza
-    page: 5             // numer strony,
-    totalCount: true    // dodaje do wyników pole c__ (lub przed ostatnie w tablicy) z sumą rekordów zapytania
+    outFormat: 'array', // return results as Array instead of object (object like JSON is default behavior for this library)
+    limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with curent row number
+    page: 5             // page number to fetch,
+    totalCount: true    // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
 }
 ```
 [`API`](#API)

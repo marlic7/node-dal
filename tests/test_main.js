@@ -66,7 +66,6 @@ describe('Data Access Layer simple test', function() {
         //    });
         //});
 
-        // @todo-me: selectClobValueSql do dokumentacji
         it('should get CLOB value', function(done) {
             dal.selectClobValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], function(err, result) {
                 if(err) {

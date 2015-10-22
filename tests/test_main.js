@@ -67,6 +67,7 @@ describe('Data Access Layer simple test', function() {
         //});
 
         it('should get CLOB value', function(done) {
+            this.timeout(5000); // 5 sekund
             dal.selectClobValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], function(err, result) {
                 if(err) {
                     done(err);
@@ -465,6 +466,62 @@ describe('Data Access Layer simple test', function() {
                     return;
                 }
                 assert.equal(results.length, 150);
+                done();
+            });
+        });
+    });
+
+    describe('procedures', function() {
+        this.timeout(15000); // 15 sekund
+
+        it('should create procedure 01', function(done) {
+            dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_01 IS \n' +
+                         'BEGIN \n' +
+                             'dbms_lock.sleep(4); \n' +
+                         'END;', [], done);
+        });
+
+        it('should create procedure 02', function(done) {
+            dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_02 IS \n' +
+                'BEGIN \n' +
+                'Dbms_Output.Put_Line(\'start\');\n' +
+                'Dbms_Output.Put_Line(\'finish\');\n' +
+                'END;', [], done);
+        });
+
+        it('should create procedure 03', function(done) {
+            dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_03(v_in IN VARCHAR2, v_out OUT VARCHAR2) IS \n' +
+                'BEGIN \n' +
+                'v_out := \'Hello \' || v_in;\n' +
+                'END;', [], done);
+        });
+
+        it('should run procedure that wait 4 secs', function(done) {
+            dal.runProcedure('test_proc_01', {}, done);
+        });
+
+        it('should run procedure and grab DBMS_OUTPUT', function(done) {
+            dal.runProcedure('test_proc_02', {}, { dbmsOutput: true }, function(err, results, output) {
+                if(err) {
+                    done(err);
+                    return;
+                }
+                assert.equal(output, 'start\nfinish');
+                done();
+            });
+        });
+
+        it('should run procedure with params', function(done) {
+            var params = {
+                vIn:  'Tom',
+                vOut: { type: dal.STRING, dir : dal.BIND_OUT }
+            };
+            dal.runProcedure('test_proc_03', params, function(err, results) {
+                if(err) {
+                    done(err);
+                    return;
+                }
+                assert.equal(results.vOut, 'Hello Tom');
                 done();
             });
         });

@@ -274,9 +274,11 @@ dal.querySql('DROP TABLE test_01', [], done);
 ---
 
 <a name="runProcedure" />
-**runProcedure** (procName:string, bind:object|Array, cb:function)
+**runProcedure** (procName:string, bind:object|Array, [optProc:object], cb:function)
 
-Invoke stored procedure.
+see params details: [`optProc`](#params-opt-proc)
+
+Invoke stored procedure with parameters.
 
 ```js
 var bindvars = {
@@ -293,6 +295,20 @@ dal.runProcedure('procedure01', bindvars, function(err, results) {
     cb(null, results);
 });
 ```
+
+Invoke stored procedure and grab dbmsOutput
+
+```js
+dal.runProcedure('procedure02', {}, {dbmsOutput: true}, function(err, results, output) {
+    if(err) {
+        cb(new Error(err));
+        return;
+    }
+
+    cb(null, results, output);
+});
+```
+
 [`API`](#API)
 
 ---
@@ -574,6 +590,18 @@ var opt = {
     limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with curent row number
     page: 5             // page number to fetch,
     totalCount: true    // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
+}
+```
+[`API`](#API)
+
+
+<a name="params-opt-proc" />
+#### optProc
+
+
+```js
+var optProc = {
+    dbmsOutput: true // fetch all DBMS_OUTPUT.PUT_LINE from procedure and put that string as last callback argument
 }
 ```
 [`API`](#API)

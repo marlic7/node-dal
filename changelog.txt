@@ -1,2 +1,17 @@
+v1.1.0
+- adoptation for oracledb@1.3.0
+- in runProcedure added new param with options, first param value {dbmsOutput: true} which fetches DBMS_OUTPUT.PUT_LINE
+
+v1.0.3
+- adoptation for oracledb@1.2.0
+- fix lob release event from 'end' to 'close' for oracledb@1.2.0
+
+v1.0.2
+- fix doc
+- relaxation required oracledb driver version (before requiredVer = 'x.y.z' after requiredVer = '~x.y.z')
+
+v1.0.1
+- fix doc
+
 v1.0.0
 - first public release

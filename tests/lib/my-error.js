@@ -24,11 +24,11 @@ global.MyError = function (msg, debug) {
     // wyrzucenie do logu stosu z oryginalnego wyrzutu błedu jeżeli taki istnieje
     if(typeof msg['stack'] != 'undefined') {
         //noinspection JSUnresolvedVariable
-        console.log('error.stack: ', msg.stack);
+        //console.log('error.stack: ', msg.stack);
     }
 
     if(_error.debug) {
-        console.log('error.debug: ', JSON.stringify(_error.debug));
+        //console.log('error.debug: ', JSON.stringify(_error.debug));
     }
 
     return _error;

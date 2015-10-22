@@ -1,3 +1,8 @@
+/**
+ * First create user testy on XE DB and give him perms:
+ * grant execute on dbms_lock to testy;
+ *
+ */
 module.exports = {
     oracle: {
         connection: {

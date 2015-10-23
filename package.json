@@ -21,14 +21,15 @@
   },
   "dependencies": {
     "async": "0.9.0",
-    "semver": "4.3.1",
     "findup-sync": "0.2.1",
     "oracle-prepare-sql": "~1.0.0",
+    "semver": "4.3.1",
     "underscore-mixins2": "~1.0.1"
   },
   "devDependencies": {
     "oracledb": "~1.3.0",
     "fast-stats": "0.0.3",
+    "moment-timezone": "^0.4.1",
     "grunt": "^0.4.5",
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-jsdoc": "^0.5.8",

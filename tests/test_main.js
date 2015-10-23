@@ -1,10 +1,12 @@
+//process.env.TZ = 'Europe/Warsaw';
 
 // setup MyError
 require("./lib/my-error");
 
 var assert     = require('assert'),
     conf       = require('./config').oracle,
-    dalFactory = require('../lib/dalFactory');
+    dalFactory = require('../lib/dalFactory'),
+    moment     = require('moment-timezone');
 
 describe('Data Access Layer simple test', function() {
     var dal,
@@ -28,7 +30,11 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should create test_02 table', function(done) {
-            dal.querySql({ sql: 'CREATE TABLE test_02 (id NUMBER NOT NULL, text_clob CLOB, CONSTRAINT test_02_pk PRIMARY KEY (id))', bind: [], cb: done});
+            dal.querySql({ sql: 'CREATE TABLE test_02 (id NUMBER NOT NULL, text_clob CLOB, CONSTRAINT test_02_pk PRIMARY KEY (id))', cb: done});
+        });
+
+        it('should create test_03 table', function(done) {
+            dal.querySql({ sql: 'CREATE TABLE test_03 (start_date DATE)', cb: done});
         });
 
         it('should insert 1st row to test_01', function(done) {
@@ -471,34 +477,46 @@ describe('Data Access Layer simple test', function() {
         });
     });
 
-    describe('procedures', function() {
-        this.timeout(15000); // 15 sekund
-
+    describe('create procedures', function() {
         it('should create procedure 01', function(done) {
             dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_01 IS \n' +
-                         'BEGIN \n' +
-                             'dbms_lock.sleep(4); \n' +
-                         'END;', [], done);
+                'BEGIN \n' +
+                'dbms_lock.sleep(4); \n' +
+                'END;', [], done);
         });
 
         it('should create procedure 02', function(done) {
             dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_02 IS \n' +
                 'BEGIN \n' +
-                'Dbms_Output.Put_Line(\'start\');\n' +
-                'Dbms_Output.Put_Line(\'finish\');\n' +
+                    'Dbms_Output.Put_Line(\'start\');\n' +
+                    'Dbms_Output.Put_Line(\'finish\');\n' +
                 'END;', [], done);
         });
 
         it('should create procedure 03', function(done) {
             dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_03(v_in IN VARCHAR2, v_out OUT VARCHAR2) IS \n' +
                 'BEGIN \n' +
-                'v_out := \'Hello \' || v_in;\n' +
+                    'v_out := \'Hello \' || v_in;\n' +
                 'END;', [], done);
         });
 
-        it('should run procedure that wait 4 secs', function(done) {
-            dal.runProcedure('test_proc_01', {}, done);
+        it('should create procedure 04', function(done) {
+            dal.querySql('CREATE OR REPLACE PROCEDURE test_proc_04(v_start_date IN DATE, v_info OUT VARCHAR2, v_end_date OUT DATE) IS \n' +
+                'BEGIN \n' +
+                    'v_info := \'Start process at: \' || To_Char(v_start_date, \'yyyy.mm.dd hh24:mi:ss\');\n' +
+                    'v_end_date := v_start_date + 1;\n' +
+                    'INSERT INTO test_03 VALUES (v_end_date);' +
+                    'Dbms_Output.Put_Line(v_info);\n' +
+                'END;', [], done);
         });
+    });
+
+    describe('run procedures', function() {
+        this.timeout(15000); // 15 sekund
+
+        //it('should run procedure that wait 4 secs', function(done) {
+        //    dal.runProcedure('test_proc_01', {}, done);
+        //});
 
         it('should run procedure and grab DBMS_OUTPUT', function(done) {
             dal.runProcedure('test_proc_02', {}, { dbmsOutput: true }, function(err, results, output) {
@@ -525,6 +543,50 @@ describe('Data Access Layer simple test', function() {
                 done();
             });
         });
+
+        it('should run procedure with date type params with SQL cast function as IN parameter', function(done) {
+            var params = {
+                //vStartDate: '2015-10-23',
+                vStartDate: { fn: 'To_Date(?, \'yyyymmdd\')', bind: '20151023' },
+                vInfo:      { type: dal.STRING, dir : dal.BIND_OUT },
+                vEndDate:   { type: dal.DATE,   dir : dal.BIND_OUT }
+            };
+            dal.runProcedure('test_proc_04', params, { dbmsOutput: true }, function(err, results, output) {
+                if(err) {
+                    done(err);
+                    return;
+                }
+                assert.equal(results.vInfo,    'Start process at: 2015.10.23 00:00:00');
+                assert.equal(output,           'Start process at: 2015.10.23 00:00:00');
+                assert.equal((moment.tz(results.vEndDate, 'America/Los_Angeles')).tz('Europe/Warsaw'), (new Date('2015-10-24')));
+                // getTimezoneOffset()
+                //assert.equal(results.vEndDate, new Date('2015-10-24'));
+                done();
+            });
+        });
+    });
+
+    describe('test NLS params', function() {
+        it('should get all rows for test_01', function(done) {
+            dal.selectAllRows({
+                tbl: 'NLS_SESSION_PARAMETERS',
+                fields: null,
+                where: [
+                    ['parameter in (\'NLS_DATE_FORMAT\')', null]
+                ],
+                cb: function(err, result) {
+                    if(err) {
+                        console.log('debug: ', err.debug);
+                        done(err);
+                        return;
+                    }
+                    assert.deepEqual(result, [
+                        {"PARAMETER":"NLS_DATE_FORMAT","VALUE":"yyyy-mm-dd"}
+                    ]);
+                    done();
+                }
+            });
+        });
     });
 
     describe('drop objects - clean schema', function() {
@@ -536,8 +598,22 @@ describe('Data Access Layer simple test', function() {
             dal.querySql('DROP TABLE test_02', done);
         });
 
+        //it('should drop test_03 table', function(done) {
+        //    dal.querySql('DROP TABLE test_03', done);
+        //});
+
         it('should drop test_01_sid sequence', function(done) {
             dal.querySql('DROP sequence test_01_sid', done);
+        });
+
+        it('should drop procedures', function(done) {
+            var procs = [
+                    'test_proc_01',
+                    'test_proc_02',
+                    'test_proc_03'
+                ],
+                sqls = procs.map(function(p) { return ['DROP PROCEDURE ' + p, []]; });
+            dal.executeTransaction(sqls, done);
         });
     });
 

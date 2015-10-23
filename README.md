@@ -1,4 +1,4 @@
-# Node.js Database Abstraction Layer
+# node-dal version 1.1.0 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer. 
 
@@ -420,6 +420,8 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
 
 Execute simple transaction. 
 Either all queries from array will be succesful perform or none of them.
+
+It could be used for multi DDL instructions but in such case transaction won't be work.
 
 ```js
 var sqlBindArray = [

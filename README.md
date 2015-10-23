@@ -60,7 +60,11 @@ module.exports = {
         },
         getConnMaxProbes   :  50, // max number of retries to get connection from pool after which error will be thrown
         getConnWaitMinTime : 100, // minimum miliseconds for retry to get connection from pool after rejcect
-        getConnWaitMaxTime : 200  // maximum miliseconds for retry to get connection from pool after rejcect
+        getConnWaitMaxTime : 200, // maximum miliseconds for retry to get connection from pool after rejcect
+        nlsSessionParameters: {
+            time_zone:       '00:00', // fix for bad date cast by oracledb when read
+            nls_date_format: 'yyyy-mm-dd'
+        }
     },
     other: { ... }
 };

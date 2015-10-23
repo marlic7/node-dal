@@ -1,6 +1,7 @@
 v1.1.0
 - adoptation for oracledb@1.3.0
-- in runProcedure added new param with options, first param value {dbmsOutput: true} which fetches DBMS_OUTPUT.PUT_LINE
+- in runProcedure added new param with options and first param value {dbmsOutput: true} which fetches DBMS_OUTPUT.PUT_LINE
+- automaticly sets nls_session_parameters from config
 
 v1.0.3
 - adoptation for oracledb@1.2.0

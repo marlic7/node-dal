@@ -5,8 +5,7 @@ require("./lib/my-error");
 
 var assert     = require('assert'),
     conf       = require('./config').oracle,
-    dalFactory = require('../lib/dalFactory'),
-    moment     = require('moment-timezone');
+    dalFactory = require('../lib/dalFactory');
 
 describe('Data Access Layer simple test', function() {
     var dal,
@@ -558,9 +557,7 @@ describe('Data Access Layer simple test', function() {
                 }
                 assert.equal(results.vInfo,    'Start process at: 2015.10.23 00:00:00');
                 assert.equal(output,           'Start process at: 2015.10.23 00:00:00');
-                assert.equal((moment.tz(results.vEndDate, 'America/Los_Angeles')).tz('Europe/Warsaw'), (new Date('2015-10-24')));
-                // getTimezoneOffset()
-                //assert.equal(results.vEndDate, new Date('2015-10-24'));
+                assert.deepEqual(results.vEndDate.toJSON(), (new Date('2015-10-24')).toJSON());
                 done();
             });
         });
@@ -598,9 +595,9 @@ describe('Data Access Layer simple test', function() {
             dal.querySql('DROP TABLE test_02', done);
         });
 
-        //it('should drop test_03 table', function(done) {
-        //    dal.querySql('DROP TABLE test_03', done);
-        //});
+        it('should drop test_03 table', function(done) {
+            dal.querySql('DROP TABLE test_03', done);
+        });
 
         it('should drop test_01_sid sequence', function(done) {
             dal.querySql('DROP sequence test_01_sid', done);

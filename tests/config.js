@@ -13,12 +13,11 @@ module.exports = {
             poolIncrement:  1,
             poolTimeout:    60
         },
-        getConnMaxProbes   :  50, // times
-        getConnWaitMinTime : 100, // miliseconds
-        getConnWaitMaxTime : 200, // miliseconds
+        getConnMaxProbes:   50,  // times
+        getConnWaitMinTime: 100, // miliseconds
+        getConnWaitMaxTime: 200, // miliseconds
         nlsSessionParameters: {
-            time_zone: 'Europe/Warsaw',
-            //time_zone: 'America/Montreal',
+            time_zone:       '00:00', // fix for bad date cast by oracledb when read
             nls_date_format: 'yyyy-mm-dd'
         }
     }

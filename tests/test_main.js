@@ -567,7 +567,6 @@ describe('Data Access Layer simple test', function() {
         it('should get all rows for test_01', function(done) {
             dal.selectAllRows({
                 tbl: 'NLS_SESSION_PARAMETERS',
-                fields: null,
                 where: [
                     ['parameter in (\'NLS_DATE_FORMAT\')', null]
                 ],

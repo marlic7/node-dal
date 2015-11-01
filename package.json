@@ -10,10 +10,13 @@
   "author": "Mariusz Lichota",
   "license": "MIT",
   "keywords": [
-    "sql",
-    "query",
     "oracle",
-    "dbi"
+    "oracledb",
+    "dbi",
+    "dal",
+    "node dal",
+    "database abstraction layer",
+    "database"
   ],
   "repository": {
     "type": "git",

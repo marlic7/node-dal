@@ -15,21 +15,14 @@ dalFactory('oracledb', conf, function(err, dal) {
 
     http.createServer(function (req, res) {
 
-        dal.getDbConnection(function(err, connection) {
+        dal.selectOneValueSql('SELECT SYSDATE FROM DUAL', [], function(err, result) {
             if(err) {
                 console.trace(err);
                 return false;
             }
 
-            connection.release(function(err) {
-                if(err) {
-                    console.trace(err);
-                    return false;
-                }
-
-                res.writeHead(200, { 'Content-Type': 'text/plain' });
-                res.end('Hello World\n');
-            });
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end(result + '\n');
         });
 
     }).listen(7000, "127.0.0.1");

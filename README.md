@@ -1,6 +1,6 @@
-# node-dal version 1.1.6 (Node.js Database Abstraction Layer)
+# node-dal version 1.2.0 (Node.js Database Abstraction Layer)
 
-This is yet another database abstraction layer. 
+This is yet another database abstraction layer.
 
 It purpose is to be:
 
@@ -14,7 +14,7 @@ It purpose is to be:
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
-* Oracle (oracledb driver v1.6.0)
+* Oracle (oracledb driver v1.9.3)
 
 This library is not:
 * ORM
@@ -78,14 +78,14 @@ connection fetch from pool (pool.getConnection). Currently oracledb hasn't sessi
 ### tests
 
 ```bash
-npm test 
+npm test
 npm run testperf
 ```
 
 Library was successfuly tested with:
 DB: Oracle 11g XE, 11.2.0.3 EE
-Node.js: v0.10.38
-OS: Ubuntu 14.04, 14.10 and CentOS 6.6
+Node.js: v6.2.1
+OS: Ubuntu 16.04
 
 ## API
 
@@ -241,7 +241,7 @@ dal.selectAllRows('test_01', null, null, null, {outFormat: 'array', limit:10, pa
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, result);
 });
 ```
@@ -260,7 +260,7 @@ dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T']
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -300,7 +300,7 @@ dal.runProcedure('procedure01', bindvars, function(err, results) {
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -333,7 +333,7 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -354,7 +354,7 @@ dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', func
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -373,7 +373,7 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -386,16 +386,16 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null
 
 see params details: [`where`](#params-where) [`data`](#params-data)
 
-Invoke UPDATE on specified table. 
+Invoke UPDATE on specified table.
 Only fields in given data parameter object (simple key:value) will be modified for rows selected by given where parameter.
- 
+
 ```js
 dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, result) {
     if(err) {
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -416,7 +416,7 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
         cb(new Error(err));
         return;
     }
-    
+
     cb(null, results);
 });
 ```
@@ -427,7 +427,7 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
 <a name="executeTransaction"></a>
 **executeTransaction**  (sqlBindArray:Array, cb:function)
 
-Execute simple transaction. 
+Execute simple transaction.
 Either all queries from array will be succesful perform or none of them.
 
 It could be used for multi DDL instructions but in such case transaction won't be work.
@@ -449,7 +449,7 @@ dal.executeTransaction(sqlBindArray, function(err, results) {
     assert.equal(results.length, 4);
     done();
 });
-``` 
+```
 [`API`](#API)
 
 ---
@@ -478,12 +478,12 @@ dal.getDbConnection(function(err, connection){
                 cb(new Error(err));
                 return;
             }
-            
+
             cb(null, result);
         });
     });
 });
-``` 
+```
 [`API`](#API)
 
 ---
@@ -616,4 +616,3 @@ var optProc = {
 }
 ```
 [`API`](#API)
-

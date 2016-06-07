@@ -1,7 +1,17 @@
 /**
- * First create user testy on XE DB and give him perms:
- * grant execute on dbms_lock to testy;
- */
+ First create user testy on XE DB and give him perms:
+
+ create user testy identified by testy123;
+ alter user testy default tablespace users;
+ alter user testy quota 500M on users;
+ grant CREATE SESSION to testy;
+ grant create table to testy;
+ grant create view to testy;
+ grant create sequence to testy;
+ grant create procedure to testy;
+ grant execute on dbms_lock to testy;
+
+*/
 module.exports = {
     oracle: {
         connection: {

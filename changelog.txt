@@ -1,3 +1,6 @@
+v1.2.1
+- remove grunt for npm run
+
 v1.2.0
 - adoptation for oracledb@1.9.3 and Node.js v6
 - upgrade dependencies

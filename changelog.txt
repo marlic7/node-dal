@@ -1,5 +1,7 @@
 v1.2.1
 - remove grunt for npm run
+- replace jshint with eslint
+- fix code to new eslint rules
 
 v1.2.0
 - adoptation for oracledb@1.9.3 and Node.js v6

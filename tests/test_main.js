@@ -232,7 +232,6 @@ describe('Data Access Layer simple test', function() {
                             return;
                         }
 
-                        //noinspection JSUnresolvedFunction
                         conn.rollback(function(err) {
                             if (err) {
                                 done(err);
@@ -286,11 +285,10 @@ describe('Data Access Layer simple test', function() {
                 ['UPDATE test_01_fake SET text = :0 WHERE id = :1', ['T02', 131]]
             ];
 
-            //noinspection JSUnusedLocalSymbols
             dal.executeTransaction(sqlBinds, function(err, results) {
                 if(err) {
                     assert.equal(err.message, 'ORA-00942: table or view does not exist');
-                    done();
+                    done(null, results);
                     return;
                 }
                 done(new Error('Error is not occured!'));
@@ -307,7 +305,6 @@ describe('Data Access Layer simple test', function() {
                     done(err);
                     return;
                 }
-                //noinspection JSUnresolvedVariable
                 assert.equal(result.DAT, (new Date()).toJSON().slice(0, 10));
                 done();
             });
@@ -371,7 +368,7 @@ describe('Data Access Layer simple test', function() {
         it('should get all rows for test_01', function(done) {
             dal.selectAllRows('test_01', null, [], ['id'], function(err, result) {
                 if(err) {
-                    console.log('debug: ', err.debug);
+                    //console.log('debug: ', err.debug);
                     done(err);
                     return;
                 }
@@ -432,8 +429,7 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should throw Error: Niewłaściwa liczba wierszy zwrócona przez bazę danych', function(done) {
-            //noinspection JSUnusedLocalSymbols
-            dal.selectOneRow('test_01', null, [], function(err, result) {
+            dal.selectOneRow('test_01', null, [], function(err) {
                 assert.equal(err.message, 'Wrong number rows returned from database (6)');
                 done();
             });
@@ -572,7 +568,7 @@ describe('Data Access Layer simple test', function() {
                 ],
                 cb: function(err, result) {
                     if(err) {
-                        console.log('debug: ', err.debug);
+                        //console.log('debug: ', err.debug);
                         done(err);
                         return;
                     }

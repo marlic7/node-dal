@@ -106,7 +106,6 @@ describe('Performance tests', function() {
                     return;
                 }
                 results.forEach(function(r) {
-                    //noinspection JSUnresolvedVariable
                     //console.log('r: ', r);
                     assert.deepEqual(r.rows[0][0], 100);
                 });

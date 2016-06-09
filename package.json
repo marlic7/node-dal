@@ -1,12 +1,12 @@
 {
   "name": "node-dal",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
     "test": "mocha ./tests/ --reporter=spec --timeout 150000",
     "testperf": "mocha ./tests/perf/ --reporter=spec --timeout 150000",
-    "jshint": "jshint Gruntfile.js lib/*.js lib/drivers/*.js"
+    "eslint": "eslint **/*.js"
   },
   "author": "Mariusz Lichota",
   "license": "MIT",

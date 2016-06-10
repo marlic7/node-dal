@@ -4,9 +4,9 @@
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
-    "test": "mocha ./tests/ --reporter=spec --timeout 150000",
-    "testperf": "mocha ./tests/perf/ --reporter=spec --timeout 150000",
-    "eslint": "eslint **/*.js"
+    "test": "mocha -R spec --timeout 15000 ./test/",
+    "testperf": "mocha -R spec --timeout 150000 ./test/perf/",
+    "eslint": "eslint ./libs ./tests"
   },
   "author": "Mariusz Lichota",
   "license": "MIT",
@@ -28,6 +28,7 @@
     "find-up": "^1.1.2",
     "oracle-prepare-sql": "~1.0.0",
     "semver": "^5.1.0",
+    "should": "^9.0.1",
     "underscore-mixins2": "~1.0.1"
   },
   "devDependencies": {

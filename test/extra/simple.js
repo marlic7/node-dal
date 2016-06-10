@@ -1,3 +1,4 @@
+/* eslint-disable */
 var dalFactory = require('../../lib/dalFactory'),
     conf       = require('./../config');
 
@@ -32,4 +33,3 @@ dalFactory('oracledb', conf, function(err, dal) {
         console.log(e.stack);
     }
 });
-

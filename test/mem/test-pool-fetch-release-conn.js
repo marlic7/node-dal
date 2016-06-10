@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var http = require('http'),
     conf       = require('./../config').oracle,
     dalFactory = require('../../lib/dalFactory'),
@@ -15,14 +17,21 @@ dalFactory('oracledb', conf, function(err, dal) {
 
     http.createServer(function (req, res) {
 
-        dal.selectOneValueSql('SELECT SYSDATE FROM DUAL', [], function(err, result) {
+        dal.getDbConnection(function(err, connection) {
             if(err) {
                 console.trace(err);
                 return false;
             }
 
-            res.writeHead(200, { 'Content-Type': 'text/plain' });
-            res.end(result + '\n');
+            connection.release(function(err) {
+                if(err) {
+                    console.trace(err);
+                    return false;
+                }
+
+                res.writeHead(200, { 'Content-Type': 'text/plain' });
+                res.end('Hello World\n');
+            });
         });
 
     }).listen(7000, "127.0.0.1");

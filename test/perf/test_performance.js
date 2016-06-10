@@ -72,7 +72,7 @@ describe('Performance tests', function() {
             var insertRecsClosure = function(tab) {
                 return function (rec, cb) {
                     dal.insert(tab, rec, cb);
-                }
+                };
             };
             var insertIntoTable = function(table, cb) {
                 async.mapLimit(records, insertsSimultaneouslyPerTable, insertRecsClosure(table), cb);
@@ -94,7 +94,7 @@ describe('Performance tests', function() {
         it('test if count(*) = 100', function(done) {
             var sqlArray = [];
             tables.forEach(function(tab) {
-               sqlArray.push('SELECT count(*) AS ile FROM ' + tab);
+                sqlArray.push('SELECT count(*) AS ile FROM ' + tab);
             });
             var selectCount = function(sql, cb) {
                 dal.querySql(sql,[], cb);
@@ -135,32 +135,32 @@ describe('Performance tests', function() {
             pSum = 0, wSum = 0;
         stat.forEach(function(v) {
             switch (v[0]) {
-                case 1:
-                    k1_p.push(v[0]);
-                    k1_w.push(v[1]);
-                    break;
-                case 2:
-                    k2_p.push(v[0]);
-                    k2_w.push(v[1]);
-                    break;
-                case 3:
-                case 4:
-                case 5:
-                    k3_p.push(v[0]);
-                    k3_w.push(v[1]);
-                    break;
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                    k4_p.push(v[0]);
-                    k4_w.push(v[1]);
-                    break;
-                default:
-                    k5_p.push(v[0]);
-                    k5_w.push(v[1]);
-                    break;
+            case 1:
+                k1_p.push(v[0]);
+                k1_w.push(v[1]);
+                break;
+            case 2:
+                k2_p.push(v[0]);
+                k2_w.push(v[1]);
+                break;
+            case 3:
+            case 4:
+            case 5:
+                k3_p.push(v[0]);
+                k3_w.push(v[1]);
+                break;
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+                k4_p.push(v[0]);
+                k4_w.push(v[1]);
+                break;
+            default:
+                k5_p.push(v[0]);
+                k5_w.push(v[1]);
+                break;
             }
             pSum = pSum + v[0];
             wSum = wSum + v[1];
@@ -182,6 +182,7 @@ describe('Performance tests', function() {
             return outS;
         };
 
+        /* eslint-disable */
         console.log('Wszystkich pobrań połączenia z puli:  ',  stat.length);
         console.log('Liczba wszystkich prób pobrań z puli: ', pSum);
         console.log('Łączny czas wszystkich waitów: ',        wSum);
@@ -192,6 +193,7 @@ describe('Performance tests', function() {
         console.log('Statystyka pobrań z 3-5 prób:  ',  getStats(k3_p, k3_w));
         console.log('Statystyka pobrań z 6-10 prób: ',  getStats(k4_p, k4_w));
         console.log('Statystyka pobrań pow 10 prób: ',  getStats(k5_p, k5_w));
+        /* eslint-enable */
     });
 
 });

@@ -21,7 +21,8 @@ module.exports = {
             poolMax:        10,
             poolMin:        1,
             poolIncrement:  1,
-            poolTimeout:    60
+            poolTimeout:    60,
+            _enableStats  : true
         },
         getConnMaxProbes:   50,  // times
         getConnWaitMinTime: 100, // miliseconds

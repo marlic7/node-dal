@@ -2,7 +2,8 @@
 
 # sample usage: ./sqlplus-mon.sh sessions.sql 0.5
 
-sqlplus -s "/ as sysdba" |& # Open a pipe to SQL*Plus
+#sqlplus -s "/ as sysdba" |& # Open a pipe to SQL*Plus
+sqlplus -s "sys/oracle@xe as sysdba" |& # Open a pipe to SQL*Plus
 
 cat <& p &
 

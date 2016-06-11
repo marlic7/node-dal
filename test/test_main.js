@@ -1,4 +1,4 @@
-process.env.UV_THREADPOOL_SIZE = 10; // This will work
+//process.env.UV_THREADPOOL_SIZE = 10; // This will work
 //process.env.TZ = 'Europe/Warsaw';
 
 // setup MyError
@@ -21,25 +21,41 @@ describe('Data Access Layer simple test', function() {
             }
             dal = dalObj;
 
-            /*
-            dal.querySql('DROP TABLE test_01', [], function(err) {
-
-            });
-
-            it('should drop test_02 table', function(done) {
-                dal.querySql('DROP TABLE test_02', done);
-            });
-
-            it('should drop test_03 table', function(done) {
-                dal.querySql('DROP TABLE test_03', done);
-            });
-
-            it('should drop test_01_sid sequence', function(done) {
-                dal.querySql('DROP sequence test_01_sid', done);
-            });
-            */
-
             done();
+        });
+    });
+
+    describe('cleanup DB structure and some DDL fail test', function() {
+        it('should drop test_01 table if table exists', function(done) {
+            dal.querySql('DROP TABLE test_01', function() { done(); });
+        });
+
+        it('should drop test_02 table if table exists', function(done) {
+            dal.querySql('DROP TABLE test_02', function() { done(); });
+        });
+
+        it('should drop test_03 table if table exists', function(done) {
+            dal.querySql('DROP TABLE test_03', function() { done(); });
+        });
+
+        it('should drop test_01_sid sequence if any exists', function(done) {
+            dal.querySql('DROP sequence test_01_sid', function() { done(); });
+        });
+
+        it('should fail on drop not existed table', function(done) {
+            dal.querySql('DROP table this_table_not_exist', function(err) {
+                should.exists(err);
+                err.message.should.startWith('ORA-00942');
+                done();
+            });
+        });
+
+        it('should fail on create table whith to long name', function(done) {
+            dal.querySql('CREATE TABLE this_is_to_long_name_for_oracle_table (a date)', function(err) {
+                should.exists(err);
+                err.message.should.startWith('ORA-00972');
+                done();
+            });
         });
     });
 
@@ -65,7 +81,7 @@ describe('Data Access Layer simple test', function() {
             dal.querySql({ sql: 'INSERT INTO test_01 VALUES (2, \'test2\')', bind: [], cb: done });
         });
 
-        it('should insert 1nd row to test_02', function(done) {
+        it('should insert 3rd row to test_02', function(done) {
             dal.querySql({ sql: 'INSERT INTO test_02 VALUES (1, :0)', bind: [clob_1], cb: done });
         });
 
@@ -90,7 +106,7 @@ describe('Data Access Layer simple test', function() {
         //});
 
         it('should get CLOB value', function(done) {
-            this.timeout(5000); // 5 sekund
+            //this.timeout(5000); // 5 sekund
             dal.selectClobValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], function(err, result) {
                 should.not.exist(err);
                 should.equal(result.length, 120000);
@@ -145,6 +161,7 @@ describe('Data Access Layer simple test', function() {
                 done();
             });
         });
+
 
         it('should modify CLOB field in row ID = 1', function(done) {
             dal.update('test_02', {text_clob: 'modified CLOB'}, ['id = ?', 1], function(err, result) {
@@ -297,7 +314,6 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should get all rows for test_01', function(done) {
-            console.log('przed wywolaniem 1');
             dal.selectAllRows('test_01', null, [], ['id'], function(err, result) {
                 should.not.exist(err);
                 should.deepEqual(result, [
@@ -321,13 +337,7 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should get all rows for page 1 test_01', function(done) {
-            let pool = dal.getDbPool();
-
-            console.log('pool._logStats() no 1:');
-            dal.getDbPool()._logStats();
-
             dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2}, function(err, result) {
-                console.log('jest w srodku');
                 should.not.exist(err);
                 should.deepEqual(result, [[124,"AAB",1],[123,"AAA",2]]);
                 done();
@@ -335,8 +345,6 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should get all rows for page 2 test_01', function(done) {
-            console.log('pool._logStats() no 2:');
-            dal.getDbPool()._logStats();
             dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2, page: 2, totalCount: true}, function(err, result) {
                 should.not.exist(err);
                 should.deepEqual(result, [[11,"test11-modified",3,6],[10,"test10",4,6]]);
@@ -485,7 +493,7 @@ describe('Data Access Layer simple test', function() {
             async.map(execCnt, fetchNlsDateFormat, done);
         });
     });
-    /*
+
     describe('drop objects - clean schema', function() {
         it('should drop test_01 table', function(done) {
             dal.querySql('DROP TABLE test_01', [], done);
@@ -513,7 +521,12 @@ describe('Data Access Layer simple test', function() {
             dal.executeTransaction(sqls, done);
         });
     });
-    */
+
+    // runs after all tests in this block
+    after(function() {
+        console.log('\n\n');
+        dal.getDbPool()._logStats();
+    });
 });
 
 function randomString(len, charSet) {

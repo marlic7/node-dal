@@ -1,6 +1,8 @@
 node_modules
 *.log
-.idea
+.idea/*
+!.idea/runConfigurations
 npm-debug.log
 temp
 tmp
+test/config.js

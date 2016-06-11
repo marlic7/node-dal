@@ -194,6 +194,9 @@ describe('Performance tests', function() {
         console.log('Statystyka pobrań z 6-10 prób: ',  getStats(k4_p, k4_w));
         console.log('Statystyka pobrań pow 10 prób: ',  getStats(k5_p, k5_w));
         /* eslint-enable */
+
+        console.log('\n\n');
+        dal.getDbPool()._logStats();
     });
 
 });

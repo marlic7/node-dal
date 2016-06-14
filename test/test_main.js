@@ -4,7 +4,7 @@
 // setup MyError
 require("./lib/my-error");
 
-const should     = require('should'),
+const should   = require('should'),
     async      = require('async'),
     conf       = require('./config').oracle,
     dalFactory = require('../lib/dalFactory');

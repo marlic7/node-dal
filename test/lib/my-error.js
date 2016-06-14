@@ -1,6 +1,8 @@
-
-// own Error handler
-global.MyError = function (msg, debug) {
+/**
+ * own Error handler
+ * @type {global.MyError}
+ */
+MyError = global.MyError = function (msg, debug) {
     var _error = Error.call(Error, msg); // create object with it
 
     _error.debug = [];
@@ -19,16 +21,6 @@ global.MyError = function (msg, debug) {
     if(msg && msg.message) {
         _error.message = msg.message.replace('Error: Error: ', 'Error: ').trim();
     }
-    //console.log(_error.message);
-
-    // wyrzucenie do logu stosu z oryginalnego wyrzutu błedu jeżeli taki istnieje
-    // if(typeof msg['stack'] != 'undefined') {
-    //     //console.log('error.stack: ', msg.stack);
-    // }
-    //
-    // if(_error.debug) {
-    //     //console.log('error.debug: ', JSON.stringify(_error.debug));
-    // }
 
     return _error;
 };

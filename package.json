@@ -26,14 +26,15 @@
   "dependencies": {
     "async": "^2.0.0-rc.5",
     "find-up": "^1.1.2",
+    "lodash": "^4.13.1",
     "oracle-prepare-sql": "~1.0.0",
-    "semver": "^5.1.0",
-    "should": "^9.0.1",
-    "underscore-mixins2": "~1.0.1"
+    "semver": "^5.1.0"
   },
   "devDependencies": {
+    "asyncawait": "^1.0.3",
     "fast-stats": "0.0.3",
     "node-string-pad": "0.0.4",
-    "oracledb": "^1.9.3"
+    "oracledb": "^1.9.3",
+    "should": "^9.0.1"
   }
 }

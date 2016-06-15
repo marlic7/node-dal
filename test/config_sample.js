@@ -25,12 +25,9 @@ module.exports = {
             poolTimeout:    60,
             _enableStats  : true
         },
-        getConnMaxProbes:   50,  // times
-        getConnWaitMinTime: 100, // miliseconds
-        getConnWaitMaxTime: 200, // miliseconds
         nlsSessionParameters: {
-            time_zone:       '00:00', // fix for bad date cast by oracledb when read
-            nls_date_format: 'yyyy-mm-dd'
+            //time_zone:       '00:00', // fix for bad date cast by oracledb when read - better set it in env (TZ='00:00')!
+            //nls_date_format: 'yyyy-mm-dd' // better set it in env (NLS_DATE_FORMAT='yyyy-mm-dd')!
         }
     }
 };

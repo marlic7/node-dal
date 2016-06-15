@@ -4,8 +4,8 @@
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
-    "test": "mocha -R spec --timeout 15000 ./test/",
-    "testperf": "mocha -R spec --timeout 150000 ./test/perf/",
+    "test": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' mocha -R spec --timeout 15000 ./test/",
+    "testperf": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' mocha -R spec --timeout 150000 ./test/perf/",
     "eslint": "eslint ./libs ./tests"
   },
   "author": "Mariusz Lichota",

@@ -66,8 +66,8 @@ describe('Data Access Layer promises with asyncawait test', function() {
 
         it('should async code run like sync', function (done) {
             let doJob = async(function() {
-                let tabCnt1 = await(dal.selectOneValueSql("SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'", [])),
-                    tabCnt2 = await(dal.selectOneValueSql({ sql: "SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'", bind: [] }));
+                let tabCnt1 = await(dal.selectOneValueSql("SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'")),
+                    tabCnt2 = await(dal.selectOneValueSql({ sql: "SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'" }));
 
                 return [tabCnt1, tabCnt2];
             });

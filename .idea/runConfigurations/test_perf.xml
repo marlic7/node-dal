@@ -3,7 +3,10 @@
     <node-options />
     <working-directory>$PROJECT_DIR$</working-directory>
     <pass-parent-env>true</pass-parent-env>
-    <envs />
+    <envs>
+      <env name="NLS_DATE_FORMAT" value="yyyy-mm-dd" />
+      <env name="TZ" value="00:00" />
+    </envs>
     <ui>bdd</ui>
     <extra-mocha-options>--timeout 150000</extra-mocha-options>
     <test-kind>DIRECTORY</test-kind>

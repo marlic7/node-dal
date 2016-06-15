@@ -74,8 +74,8 @@ describe('Data Access Layer promises with asyncawait test', function() {
 
             doJob()
                 .then(function(out) {
-                    should.equal(out.length, 5);
-                    should.deepEqual(out, {});
+                    should.equal(out.length, 2);
+                    should.deepEqual(out, [5, 5]);
                     done();
                 })
                 .catch(function(err) { done(err) });

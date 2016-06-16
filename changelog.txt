@@ -1,3 +1,8 @@
+v2.0.1
+- alternative promisify all methods
+- replace argsParser with external module fn-params-parser
+- remove own Oracle queue implementation (oracledb now has it)
+
 v1.2.1
 - remove grunt for npm run
 - replace jshint with eslint

@@ -1,4 +1,4 @@
-# node-dal version 1.2.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.0.1 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -6,11 +6,11 @@ It purpose is to be:
 
 1. Simple
 2. Easy and elastic to use
-3. Pool support with queue and parameterized timeout
-4. Support pagination
-5. Well parameterizable
-6. Well tested
-7. Well documented
+3. Support pagination
+4. Well parameterizable
+5. Well tested
+6. Well documented
+7. Callback or Promise style code
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
@@ -18,7 +18,6 @@ Supported databases:
 
 This library is not:
 * ORM
-* Promise based
 
 ## Documentation
 
@@ -58,9 +57,10 @@ module.exports = {
             poolIncrement : 1,
             poolTimeout   : 60
         },
-        getConnMaxProbes   :  50, // max number of retries to get connection from pool after which error will be thrown
-        getConnWaitMinTime : 100, // minimum miliseconds for retry to get connection from pool after rejcect
-        getConnWaitMaxTime : 200, // maximum miliseconds for retry to get connection from pool after rejcect
+        /*
+            For performance reason it is better to set ENV variables: TZ=UTC,
+            NLS_DATE_FORMAT='YYYY-MM-DD' instead of below nlsSessionParameters keys.
+        */
         nlsSessionParameters: {
             time_zone:       '00:00', // fix for bad date cast by oracledb when read
             nls_date_format: 'yyyy-mm-dd'
@@ -74,6 +74,9 @@ module.exports = {
 If you set nlsSessionParameters key in config file, then ALTER SESSION ... will be invoke on every
 connection fetch from pool (pool.getConnection). Currently oracledb hasn't session tagging support
 (see [`issue 258`](https://github.com/oracle/node-oracledb/issues/258)).
+
+For performance reason it is better to set ENV variables: TZ=UTC,
+NLS_DATE_FORMAT='YYYY-MM-DD' instead of below nlsSessionParameters keys.
 
 ### tests
 
@@ -95,11 +98,13 @@ All methods parameters could be pass in two ways:
 * as a object with proper named keys
 * as a list in proper order
 
-for example both below aproach are equivalent:
+For example both below aproach are equivalent:
 ```js
 dal.querySql({sql: 'SELECT ...', bind: [15], cb: callback});
 dal.querySql('SELECT ...', [15], callback);
 ```
+
+If cb (callback) parameter is not provided then function will return Promise.
 
 <a name="API"></a>
 * [`selectOneRow`](#selectOneRow)

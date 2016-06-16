@@ -44,7 +44,7 @@ dalFactory('oracledb', conf.oracle, function(err, dal) {
 });
 ```
 
-### sample config file
+### Sample config file
 ```js
 module.exports = {
     oracle: {
@@ -70,7 +70,8 @@ module.exports = {
 };
 ```
 
-*Note!*
+**IMPORTANT!!!**
+
 If you set nlsSessionParameters key in config file, then ALTER SESSION ... will be invoke on every
 connection fetch from pool (pool.getConnection). Currently oracledb hasn't session tagging support
 (see [`issue 258`](https://github.com/oracle/node-oracledb/issues/258)).
@@ -78,7 +79,7 @@ connection fetch from pool (pool.getConnection). Currently oracledb hasn't sessi
 For performance reason it is better to set ENV variables: TZ=UTC,
 NLS_DATE_FORMAT='YYYY-MM-DD' instead of below nlsSessionParameters keys.
 
-### tests
+### Tests
 
 ```bash
 npm test

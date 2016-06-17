@@ -64,7 +64,8 @@ module.exports = {
         nlsSessionParameters: {
             time_zone:       '00:00', // fix for bad date cast by oracledb when read
             nls_date_format: 'yyyy-mm-dd'
-        }
+        },
+        outFormat: 'object' // array/object
     },
     other: {}
 };

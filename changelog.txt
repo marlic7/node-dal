@@ -1,3 +1,6 @@
+v2.1.0
+- new config property: outFormat: 'object|array' for sets global out data format
+
 v2.0.1
 - alternative promisify all methods
 - replace argsParser with external module fn-params-parser

@@ -89,7 +89,7 @@ describe('Performance tests', function() {
                 sqlArray.push('SELECT count(*) AS ile FROM ' + tab);
             });
             var selectCount = function(sql, cb) {
-                dal.querySql(sql,[], cb);
+                dal.querySql(sql, [], { outFormat: 'array' }, cb);
             };
 
             async.mapLimit(sqlArray, operateSimultaneouslyTabsCnt, selectCount, function(err, results) {

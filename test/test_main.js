@@ -14,15 +14,14 @@ describe('Data Access Layer simple test', function() {
         clob_1 = randomString(120000);
 
     before(function(done) {
-        dalFactory('oracledb', conf, function(err, dalObj) {
-            if(err) {
+        dalFactory('oracledb', conf)
+            .then(function(dalObj) {
+                dal = dalObj;
+                done();
+            })
+            .catch(function(err) {
                 done(err);
-                return;
-            }
-            dal = dalObj;
-
-            done();
-        });
+            });
     });
 
     describe('cleanup DB structure and some DDL fail test', function() {
@@ -254,7 +253,7 @@ describe('Data Access Layer simple test', function() {
             ];
 
             dal.executeTransaction(sqlBinds, function(err, results) {
-                (err).should.containEql({ message: 'ORA-00942: table or view does not exist'});
+                (err.message).should.startWith('ORA-00942');
                 done();
             });
         });

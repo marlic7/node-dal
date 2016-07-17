@@ -1,4 +1,4 @@
-# node-dal version 2.0.1 (Node.js Database Abstraction Layer)
+# node-dal version 2.1.1 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -14,7 +14,7 @@ It purpose is to be:
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
-* Oracle (oracledb driver v1.9.3)
+* Oracle (oracledb driver v1.10.0)
 
 This library is not:
 * ORM
@@ -34,14 +34,16 @@ npm install --save oracledb # or any other supported db driver
 var dalFactory = require('node-dal'),
     conf       = require('./config');
 
-dalFactory('oracledb', conf.oracle, function(err, dal) {
-    if(err) {
-        throw err;
-    }
-
-    /** @typedef {OracleDB} global.dal */
-    global.dal = dal;
-});
+    dalFactory('oracledb', conf)
+        .then(function(dal) {
+            return dal.querySql('select ...')
+        })
+        .then(function(results) {
+            console.log(results);
+        })
+        .catch(function(err) {
+            console.log(err.message);
+        });        
 ```
 
 ### Sample config file
@@ -88,7 +90,7 @@ npm run testperf
 ```
 
 Library was successfuly tested with:
-DB: Oracle 11g XE, 11.2.0.3 EE
+DB: Oracle 11g XE, 11g EE, 12c EE
 Node.js: v6.2.1
 OS: Ubuntu 16.04
 

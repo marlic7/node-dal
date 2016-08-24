@@ -1,12 +1,15 @@
 {
   "name": "node-dal",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
     "test": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' mocha -R spec --timeout 15000 ./test/",
     "testperf": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' mocha -R spec --timeout 150000 ./test/perf/",
     "eslint": "eslint ./libs ./tests"
+  },
+  "engines": {
+    "node": ">=4"
   },
   "author": "Mariusz Lichota",
   "license": "MIT",
@@ -28,7 +31,7 @@
     "find-up": "^1.1.2",
     "fn-params-parser": "^1.0.0",
     "lodash": "^4.13.1",
-    "oracle-prepare-sql": "~1.0.0",
+    "oracle-prepare-sql": "1.0.1",
     "semver": "^5.1.0"
   },
   "devDependencies": {

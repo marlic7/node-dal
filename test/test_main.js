@@ -122,7 +122,7 @@ describe('Data Access Layer simple test', function() {
 
     describe('modify data', function() {
         it('should insert row and return next ID (SQL version)', function(done) {
-            dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null,'test10'], 'test_01_sid', function(err, result) {
+            dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [{type: 'pk'},'test10'], 'test_01_sid', function(err, result) {
                 should.not.exist(err);
                 should.equal(result, 10);
                 done();
@@ -130,7 +130,7 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should insert row and return next ID (NO SQL version)', function(done) {
-            dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', function(err, result) {
+            dal.insertReturningId('test_01', {id: {type: 'pk'}, text: 'test11'}, 'test_01_sid', function(err, result) {
                 should.not.exist(err);
                 should.equal(result, 11);
                 done();

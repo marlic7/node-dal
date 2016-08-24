@@ -1,3 +1,7 @@
+v2.2.0
+- changes in insertReturningId and insertReturningIdSql - bind parameter require one
+  item with value = { type: 'pk' } for primary key field which have sequence from sequence parameter
+
 v2.1.0
 - new config property: outFormat: 'object|array' for sets global out data format
 

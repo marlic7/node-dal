@@ -1,4 +1,4 @@
-# node-dal version 2.1.1 (Node.js Database Abstraction Layer)
+# node-dal version 2.2.0 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -358,7 +358,7 @@ see params details: [`data`](#params-data)
 Invoke INSERT operation with unique ID fetched from sequence and returns that ID (no SQL version).
 
 ```js
-dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', function(err, result) {
+dal.insertReturningId('test_01', {id: {type:'pk'}, text: 'test11'}, 'test_01_sid', function(err, result) {
     if(err) {
         cb(new Error(err));
         return;
@@ -377,7 +377,7 @@ dal.insertReturningId('test_01', {id: null, text: 'test11'}, 'test_01_sid', func
 Invoke INSERT operation with unique ID fetched from sequence and returns that ID (SQL version).
 
 ```js
-dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [null,'test10'], 'test_01_sid', function(err, result) {
+dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [{type:'pk'},'test10'], 'test_01_sid', function(err, result) {
     if(err) {
         cb(new Error(err));
         return;

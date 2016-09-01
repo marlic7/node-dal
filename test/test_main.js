@@ -1,3 +1,4 @@
+"use strict";
 //process.env.UV_THREADPOOL_SIZE = 10; // This will work
 //process.env.TZ = 'Europe/Warsaw';
 
@@ -280,7 +281,7 @@ describe('Data Access Layer simple test', function() {
             });
         });
 
-        it('should get row with ID=11', function(done) {
+        it('should get one value with ID=11 (sql)', function(done) {
             dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [11], function(err, result) {
                 should.not.exist(err);
                 should.equal(result, 'test11-modified');
@@ -288,7 +289,7 @@ describe('Data Access Layer simple test', function() {
             });
         });
 
-        it('should get value for ID=10 (no sql)', function(done) {
+        it('should get one value for ID=10 (no sql)', function(done) {
             dal.selectOneValue('test_01', 'text',  ['id = ?', 10], function(err, result) {
                 should.not.exist(err);
                 should.equal(result, 'test10');
@@ -306,6 +307,14 @@ describe('Data Access Layer simple test', function() {
 
         it('should get one row for ID=10', function(done) {
             dal.selectOneRow('test_01', null, ['id = ?', 10], function(err, result) {
+                should.not.exist(err);
+                should.deepEqual(result, { ID:10, TEXT: "test10" });
+                done();
+            });
+        });
+
+        it('should get one row for ID=10 (filter as object)', function(done) {
+            dal.selectOneRow('test_01', null, { id: 10 }, function(err, result) {
                 should.not.exist(err);
                 should.deepEqual(result, { ID:10, TEXT: "test10" });
                 done();
@@ -446,6 +455,15 @@ describe('Data Access Layer simple test', function() {
             });
         });
 
+        it('should run procedure and grab DBMS_OUTPUT (as promise)', function(done) {
+            dal.runProcedure('test_proc_02', {}, { dbmsOutput: true })
+                .then(results => {
+                    should.equal(results.dbmsOutput, 'start\nfinish');
+                    done();
+                })
+                .catch(err => { done(err); });
+        });
+
         it('should run procedure with params', function(done) {
             var params = {
                 vIn:  'Tom',
@@ -456,6 +474,19 @@ describe('Data Access Layer simple test', function() {
                 should.equal(results.vOut, 'Hello Tom');
                 done();
             });
+        });
+
+        it('should run procedure with params (as promise)', function(done) {
+            var params = {
+                vIn:  'Tom',
+                vOut: { type: dal.STRING, dir : dal.BIND_OUT }
+            };
+            dal.runProcedure('test_proc_03', params)
+                .then(results => {
+                    should.equal(results.vOut, 'Hello Tom');
+                    done();
+                })
+                .catch(err => { done(err); });
         });
 
         it('should run procedure with date type params with SQL cast function as IN parameter', function(done) {
@@ -472,6 +503,23 @@ describe('Data Access Layer simple test', function() {
                 should.deepEqual(results.vEndDate.toJSON(), (new Date('2015-10-24')).toJSON());
                 done();
             });
+        });
+
+        it('should run procedure with date type params with SQL cast function as IN parameter (as promise)', function(done) {
+            var params = {
+                //vStartDate: '2015-10-23',
+                vStartDate: { fn: 'To_Date(?, \'yyyymmdd\')', bind: '20151023' },
+                vInfo:      { type: dal.STRING, dir : dal.BIND_OUT },
+                vEndDate:   { type: dal.DATE,   dir : dal.BIND_OUT }
+            };
+            dal.runProcedure('test_proc_04', params, { dbmsOutput: true })
+                .then(results => {
+                    should.equal(results.vInfo,                 'Start process at: 2015.10.23 00:00:00');
+                    should.equal(results.dbmsOutput,            'Start process at: 2015.10.23 00:00:00');
+                    should.deepEqual(results.vEndDate.toJSON(), (new Date('2015-10-24')).toJSON());
+                    done();
+                })
+                .catch(err => { done(err); });
         });
     });
 

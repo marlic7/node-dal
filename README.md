@@ -1,4 +1,4 @@
-# node-dal version 2.2.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.2.1 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 

@@ -1,24 +1,16 @@
 /**
- First create user in Oracle DB and give him perms:
+ First create user in Oracle DB and give him perms eg.:
 
- create user USERNAME identified by password;
- alter user USERNAME default tablespace users;
- alter user USERNAME quota 500M on users;
- grant CREATE SESSION to USERNAME;
- grant create table to USERNAME;
- grant create view to USERNAME;
- grant create sequence to USERNAME;
- grant create procedure to USERNAME;
- grant execute on dbms_lock to USERNAME;
+    sqlplus sys@orcl as sysdba @oracle_create_test_user.sql
 
- next copy config_sample.js config.js and provide proper user/password
+ next copy config_sample.js to config.js and provide proper password, connectString, dbVer and others if needed
 */
 module.exports = {
     oracle: {
         connection: {
-            user:           "username",
+            user:           "test_node_dal",
             password:       "password",
-            connectString:  "localhost/XE",
+            connectString:  "localhost/orcl",
             poolMax:        10,
             poolMin:        1,
             poolIncrement:  1,
@@ -29,6 +21,7 @@ module.exports = {
             //time_zone:       '00:00', // fix for bad date cast by oracledb when read - better set it in env (TZ='00:00')!
             //nls_date_format: 'yyyy-mm-dd' // better set it in env (NLS_DATE_FORMAT='yyyy-mm-dd')!
         },
+        dbVer: '12',
         outFormat: 'object' // array/object
     }
 };

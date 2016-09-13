@@ -344,20 +344,57 @@ describe('Data Access Layer simple test', function() {
             });
         });
 
+
+
         it('should get all rows for page 1 test_01', function(done) {
-            dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2}, function(err, result) {
-                should.not.exist(err);
-                should.deepEqual(result, [[124,"AAB",1],[123,"AAA",2]]);
-                done();
-            });
+            // unfortunately results differs for dbVersions
+            if(dal.getCfg().dbVer >= '12') {
+                dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2}, function(err, result) {
+                    should.not.exist(err);
+                    should.deepEqual(result, [[124,"AAB"],[123,"AAA"]]);
+                    done();
+                });
+            } else {
+                dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2}, function(err, result) {
+                    should.not.exist(err);
+                    should.deepEqual(result, [[124,"AAB",1],[123,"AAA",2]]);
+                    done();
+                });
+            }
         });
 
         it('should get all rows for page 2 test_01', function(done) {
-            dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2, page: 2, totalCount: true}, function(err, result) {
-                should.not.exist(err);
-                should.deepEqual(result, [[11,"test11-modified",3,6],[10,"test10",4,6]]);
-                done();
-            });
+            // unfortunately results differs for dbVersions
+            if(dal.getCfg().dbVer >= '12') {
+                dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2, page: 2, totalCount: true}, function(err, result) {
+                    should.not.exist(err);
+                    should.deepEqual(result, [[11,"test11-modified",6],[10,"test10",6]]);
+                    done();
+                });
+            } else {
+                dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2, page: 2, totalCount: true}, function(err, result) {
+                    should.not.exist(err);
+                    should.deepEqual(result, [[11,"test11-modified",3,6],[10,"test10",4,6]]);
+                    done();
+                });
+            }
+        });
+
+        it('should get all rows for page 2 test_01 SQL version', function(done) {
+            // unfortunately results differs for dbVersions
+            if(dal.getCfg().dbVer >= '12') {
+                dal.selectAllRowsSql('SELECT t.* FROM test_01 t ORDER BY id DESC', [], {outFormat: 'array', limit: 2, page: 2, totalCount: true}, function(err, result) {
+                    should.not.exist(err);
+                    should.deepEqual(result, [[11,"test11-modified",6],[10,"test10",6]]);
+                    done();
+                });
+            } else {
+                dal.selectAllRowsSql('SELECT * FROM test_01 ORDER BY id DESC', [], {outFormat: 'array', limit: 2, page: 2, totalCount: true}, function(err, result) {
+                    should.not.exist(err);
+                    should.deepEqual(result, [[11,"test11-modified",3,6],[10,"test10",4,6]]);
+                    done();
+                });
+            }
         });
 
         it('should get all rows for page 2 test_01', function(done) {

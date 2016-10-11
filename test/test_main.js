@@ -107,6 +107,15 @@ describe('Data Access Layer simple test', function() {
 
         it('should get CLOB value', function(done) {
             //this.timeout(5000); // 5 sekund
+            dal.selectOneClobValue('test_02', 'text_clob', ['id = ?', 1], function(err, result) {
+                should.not.exist(err);
+                should.equal(result.length, 120000);
+                done();
+            });
+        });
+
+        it('should get CLOB value sql', function(done) {
+            //this.timeout(5000); // 5 sekund
             dal.selectClobValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], function(err, result) {
                 should.not.exist(err);
                 should.equal(result.length, 120000);
@@ -253,7 +262,7 @@ describe('Data Access Layer simple test', function() {
                 ['UPDATE test_01_fake SET text = :0 WHERE id = :1', ['T02', 131]]
             ];
 
-            dal.executeTransaction(sqlBinds, function(err, results) {
+            dal.executeTransaction(sqlBinds, function(err) {
                 (err.message).should.startWith('ORA-00942');
                 done();
             });
@@ -608,7 +617,9 @@ describe('Data Access Layer simple test', function() {
 
     // runs after all tests in this block
     after(function() {
+        /*eslint-disable*/
         console.log('\n\n');
+        /*eslint-enable*/
         dal.getDbPool()._logStats();
     });
 });

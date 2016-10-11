@@ -1,3 +1,7 @@
+v2.3.0
+- added new methods: selectOneClobValue, selectOneClobValueSql (in future will replace: selectClobValueSql)
+- adoptation for oracledb@1.11.0
+
 v2.2.0
 - changes in insertReturningId and insertReturningIdSql - bind parameter require one
   item with value = { type: 'pk' } for primary key field which have sequence from sequence parameter

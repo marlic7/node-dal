@@ -1,6 +1,6 @@
 {
   "name": "node-dal",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
@@ -38,7 +38,7 @@
     "asyncawait": "^1.0.3",
     "fast-stats": "0.0.3",
     "node-string-pad": "0.0.4",
-    "oracledb": "1.10.0",
+    "oracledb": "1.11.0",
     "should": "^9.0.1"
   }
 }

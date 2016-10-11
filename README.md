@@ -1,4 +1,4 @@
-# node-dal version 2.2.1 (Node.js Database Abstraction Layer)
+# node-dal version 2.3.0 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -14,7 +14,7 @@ It purpose is to be:
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
-* Oracle (oracledb driver v1.10.0)
+* Oracle (oracledb driver v1.11.0)
 
 This library is not:
 * ORM
@@ -115,7 +115,8 @@ If cb (callback) parameter is not provided then function will return Promise.
 * [`selectOneRowSql`](#selectOneRowSql)
 * [`selectOneValue`](#selectOneValue)
 * [`selectOneValueSql`](#selectOneValueSql)
-* [`selectClobValueSql`](#selectClobValueSql)
+* [`selectOneClobValue`](#selectOneClobValue)
+* [`selectOneClobValueSql`](#selectOneClobValueSql)
 * [`selectAllRows`](#selectAllRows)
 * [`selectAllRowsSql`](#selectAllRowsSql)
 * [`querySql`](#querySql)
@@ -219,15 +220,33 @@ dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10], function(err
 
 ---
 
-<a name="selectClobValueSql"></a>
-**selectClobValueSql** (sql:string, bind:object|Array, [opt:object|null], cb:function)
+<a name="selectOneClobValue"></a>
+**selectOneClobValue** (tbl:string, field:string, bind:object|Array, cb:function)
+
+Only for Oracle driver.
+
+```js
+dal.selectOneClobValue('test_01', 'text_clob', ['id = ?', 10], function(err, result) {
+    if(err) {
+        cb(new Error(err));
+        return;
+    }
+    cb(null, result);
+});
+```
+[`API`](#API)
+
+---
+
+<a name="selectOneClobValueSql"></a>
+**selectOneClobValueSql** (sql:string, bind:object|Array, [opt:object|null], cb:function)
 
 see params details: [`opt`](#params-opt)
 
 Only for Oracle driver.
 
 ```js
-dal.selectClobValueSql('SELECT text_clob FROM test_01 WHERE id=:0', [10], function(err, result) {
+dal.selectOneClobValueSql('SELECT text_clob FROM test_01 WHERE id=:0', [10], function(err, result) {
     if(err) {
         cb(new Error(err));
         return;

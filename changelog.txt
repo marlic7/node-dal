@@ -1,3 +1,8 @@
+v2.4.0
+- auto fetch CLOB fields in: selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql (required opt fetchClobs = true)
+- replace _.noop with getNoopCallback (posible logging errors in connection release)
+- async@2.1.1
+
 v2.3.0
 - added new methods: selectOneClobValue, selectOneClobValueSql (in future will replace: selectClobValueSql)
 - adoptation for oracledb@1.11.0

@@ -9,7 +9,8 @@ require("../lib/my-error");
 var assert     = require('assert'),
     async      = require('async'),
     conf       = require('./../config').oracle,
-    dalFactory = require('../../lib/dalFactory');
+    dalFactory = require('../../lib/dalFactory'),
+    MyErrorOrgin = MyError;
 
 conf.connection.poolMax = poolMax;
 
@@ -36,6 +37,8 @@ describe('Performance tests', function() {
     describe('prepare DB structure', function() {
         this.timeout(120000); // 2 minuty
 
+        disableConsoleLogErrors();
+
         it('should drop 100 tables from previous test run', function(done) {
             var dropTabs = function(tabname, cb) {
                 dal.querySql('DROP TABLE ' + tabname, [], function() {
@@ -52,7 +55,10 @@ describe('Performance tests', function() {
                     cb(); // ignore errors
                 });
             };
-            async.mapSeries(tables, createTabs, done);
+            async.mapSeries(tables, createTabs, () => {
+                enableConsoleLogErrors();
+                done();
+            });
         });
 
     });
@@ -112,3 +118,11 @@ describe('Performance tests', function() {
     });
 
 });
+
+function disableConsoleLogErrors() {
+    global.MyError = Error;
+}
+
+function enableConsoleLogErrors() {
+    global.MyError = MyErrorOrgin;
+}

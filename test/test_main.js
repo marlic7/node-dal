@@ -8,11 +8,14 @@ require("./lib/my-error");
 const should   = require('should'),
     async      = require('async'),
     conf       = require('./config').oracle,
-    dalFactory = require('../lib/dalFactory');
+    dalFactory = require('../lib/dalFactory'),
+    MyErrorOrgin = MyError;
 
 describe('Data Access Layer simple test', function() {
     var dal,
-        clob_1 = randomString(120000);
+        clob_1 = randomString(120000),
+        clob_2 = randomString(5000),
+        clob_3 = randomString(100);
 
     before(function(done) {
         dalFactory('oracledb', conf)
@@ -25,7 +28,9 @@ describe('Data Access Layer simple test', function() {
             });
     });
 
-    describe('cleanup DB structure and some DDL fail test', function() {
+    describe('cleanup DB structure and some DDL in case previous test failed', function() {
+        disableConsoleLogErrors();
+
         it('should drop test_01 table if table exists', function(done) {
             dal.querySql('DROP TABLE test_01', function() { done(); });
         });
@@ -38,6 +43,10 @@ describe('Data Access Layer simple test', function() {
             dal.querySql('DROP TABLE test_03', function() { done(); });
         });
 
+        it('should drop test_04 table if table exists', function(done) {
+            dal.querySql('DROP TABLE test_04', function() { done(); });
+        });
+
         it('should drop test_01_sid sequence if any exists', function(done) {
             dal.querySql('DROP sequence test_01_sid', function() { done(); });
         });
@@ -45,7 +54,7 @@ describe('Data Access Layer simple test', function() {
         it('should fail on drop not existed table', function(done) {
             dal.querySql('DROP table this_table_not_exist', function(err) {
                 should.exists(err);
-                err.message.should.startWith('ORA-00942');
+                err.message.should.containEql('ORA-00942');
                 done();
             });
         });
@@ -53,10 +62,12 @@ describe('Data Access Layer simple test', function() {
         it('should fail on create table whith to long name', function(done) {
             dal.querySql('CREATE TABLE this_is_to_long_name_for_oracle_table (a date)', function(err) {
                 should.exists(err);
-                err.message.should.startWith('ORA-00972');
+                err.message.should.containEql('ORA-00972');
+                enableConsoleLogErrors();
                 done();
             });
         });
+
     });
 
     describe('prepare DB structure', function() {
@@ -73,6 +84,10 @@ describe('Data Access Layer simple test', function() {
             dal.querySql({ sql: 'CREATE TABLE test_03 (start_date DATE)', cb: done});
         });
 
+        it('should create test_04 table', function(done) {
+            dal.querySql({ sql: 'CREATE TABLE test_04 (id NUMBER NOT NULL, clob_2 CLOB, fake VARCHAR(20), clob_3 CLOB, clob_4 CLOB)', cb: done});
+        });
+
         it('should insert 1st row to test_01', function(done) {
             dal.querySql('INSERT INTO test_01 VALUES (1, \'test1\')', [], done);
         });
@@ -83,6 +98,22 @@ describe('Data Access Layer simple test', function() {
 
         it('should insert 3rd row to test_02', function(done) {
             dal.querySql({ sql: 'INSERT INTO test_02 VALUES (1, :0)', bind: [clob_1], cb: done });
+        });
+
+        it('should insert 120 records to test_04', function(done) {
+            let sqls = [];
+            for(let i = 1; i < 121; i++) {
+                sqls.push(['INSERT INTO test_04 VALUES (:0, :1, :2, :3, null)', [i, clob_2, 'abc', clob_3]]);
+            }
+            dal.executeTransaction(sqls, function(err, results) {
+                if(err) {
+                    done(err);
+                    return;
+                }
+
+                should.equal(results.length, 120);
+                done();
+            });
         });
 
         it('should get col text value', function(done) {
@@ -261,9 +292,10 @@ describe('Data Access Layer simple test', function() {
                 ['UPDATE test_01 SET text = :0 WHERE id = :1', ['AAC', 124]],
                 ['UPDATE test_01_fake SET text = :0 WHERE id = :1', ['T02', 131]]
             ];
-
+            disableConsoleLogErrors();
             dal.executeTransaction(sqlBinds, function(err) {
-                (err.message).should.startWith('ORA-00942');
+                (err.message).should.containEql('ORA-00942');
+                enableConsoleLogErrors();
                 done();
             });
         });
@@ -323,9 +355,22 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should get one row for ID=10 (filter as object)', function(done) {
-            dal.selectOneRow('test_01', null, { id: 10 }, function(err, result) {
+            dal.selectOneRow('test_01', null, { id: 10 }, { fetchClobs: true }, function(err, result) {
                 should.not.exist(err);
                 should.deepEqual(result, { ID:10, TEXT: "test10" });
+                done();
+            });
+        });
+
+        it('should get one row for ID=99 with CLOB fields (filter as object)', function(done) {
+            dal.selectOneRow('test_04', null, { id: 99 }, { fetchClobs: true }, function(err, result) {
+                should.not.exist(err);
+                should.equal(result.ID, 99);
+                (result.CLOB_2).should.be.String();
+                (result.CLOB_3).should.be.String();
+                should(result.CLOB_4).be.exactly(null);
+                should.equal(result.CLOB_2.length, 5000);
+                should.equal(result.CLOB_3.length, 100);
                 done();
             });
         });
@@ -341,6 +386,24 @@ describe('Data Access Layer simple test', function() {
                     {ID: 123, TEXT: "AAA"},
                     {ID: 124, TEXT: "AAB"}
                 ]);
+                done();
+            });
+        });
+
+        it('should get all rows for test_04 (table with 3 CLOB fields)', function(done) {
+            dal.selectAllRows('test_04', null, [], ['id'], { fetchClobs: true }, function(err, result) {
+                should.not.exist(err);
+                should.equal(result.length, 120);
+                (result[0].CLOB_2).should.be.String();
+                (result[0].CLOB_3).should.be.String();
+                should(result[0].CLOB_4).be.exactly(null);
+                should.equal(result[0].CLOB_2.length, 5000);
+                should.equal(result[0].CLOB_3.length, 100);
+                (result[100].CLOB_2).should.be.String();
+                (result[100].CLOB_3).should.be.String();
+                should(result[100].CLOB_4).be.exactly(null);
+                should.equal(result[100].CLOB_2.length, 5000);
+                should.equal(result[100].CLOB_3.length, 100);
                 done();
             });
         });
@@ -414,9 +477,11 @@ describe('Data Access Layer simple test', function() {
             });
         });
 
-        it('should throw Error: Wrong number rows returned from database', function(done) {
+        it('should throw Error: Wrong number of rows returned from database', function(done) {
+            disableConsoleLogErrors();
             dal.selectOneRow('test_01', null, [], function(err) {
-                should.equal(err.message, 'Wrong number rows returned from database (6)');
+                (err.message).should.containEql('Wrong number of rows returned from database (6)');
+                enableConsoleLogErrors();
                 done();
             });
         });
@@ -600,6 +665,10 @@ describe('Data Access Layer simple test', function() {
             dal.querySql('DROP TABLE test_03', done);
         });
 
+        it('should drop test_04 table', function(done) {
+            dal.querySql('DROP TABLE test_04', done);
+        });
+
         it('should drop test_01_sid sequence', function(done) {
             dal.querySql('DROP sequence test_01_sid', done);
         });
@@ -632,4 +701,12 @@ function randomString(len, charSet) {
         randomString += charSet.substring(randomPoz,randomPoz+1);
     }
     return randomString;
+}
+
+function disableConsoleLogErrors() {
+    global.MyError = Error;
+}
+
+function enableConsoleLogErrors() {
+    global.MyError = MyErrorOrgin;
 }

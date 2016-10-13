@@ -1,4 +1,4 @@
-# node-dal version 2.3.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.4.0 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -628,7 +628,8 @@ var opt = {
     outFormat: 'array', // return results as Array instead of object (object like JSON is default behavior for this library)
     limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with curent row number
     page: 5,            // page number to fetch,
-    totalCount: true    // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
+    totalCount: true,   // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
+    fetchClobs: true    // auto fetch all data for CLOB-s (works with:  selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql)
 }
 ```
 [`API`](#API)

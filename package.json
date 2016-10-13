@@ -1,6 +1,6 @@
 {
   "name": "node-dal",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "url": "https://github.com/marlic7/node-dal.git"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.5",
+    "async": "^2.1.1",
     "find-up": "^1.1.2",
     "fn-params-parser": "^1.0.0",
     "lodash": "^4.13.1",

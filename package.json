@@ -1,6 +1,6 @@
 {
   "name": "node-dal",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "eslint": "eslint ./libs ./tests"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "author": "Mariusz Lichota",
   "license": "MIT",
@@ -27,18 +27,18 @@
     "url": "https://github.com/marlic7/node-dal.git"
   },
   "dependencies": {
-    "async": "^2.1.1",
-    "find-up": "^1.1.2",
-    "fn-params-parser": "^1.0.0",
-    "lodash": "^4.13.1",
-    "oracle-prepare-sql": "1.0.4",
-    "semver": "^5.1.0"
+    "async": "^2.1.4",
+    "find-up": "^2.1.0",
+    "fn-params-parser": "^1.0.1",
+    "lodash": "^4.17.4",
+    "oracle-prepare-sql": "1.1.0",
+    "semver": "^5.3.0"
   },
   "devDependencies": {
-    "asyncawait": "^1.0.3",
+    "asyncawait": "^1.0.6",
     "fast-stats": "0.0.3",
     "node-string-pad": "0.0.4",
-    "oracledb": "1.11.0",
-    "should": "^9.0.1"
+    "oracledb": "^1.12.2",
+    "should": "^11.1.2"
   }
 }

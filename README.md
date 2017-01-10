@@ -1,4 +1,4 @@
-# node-dal version 2.4.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.4.2 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -14,7 +14,7 @@ It purpose is to be:
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
-* Oracle (oracledb driver v1.11.0)
+* Oracle (oracledb driver v1.12.2)
 
 This library is not:
 * ORM

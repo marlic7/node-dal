@@ -1,4 +1,4 @@
-# node-dal version 2.4.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.4.2 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -14,7 +14,7 @@ It purpose is to be:
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
-* Oracle (oracledb driver v1.11.0)
+* Oracle (oracledb driver v1.12.x)
 
 This library is not:
 * ORM
@@ -109,6 +109,11 @@ dal.querySql('SELECT ...', [15], callback);
 ```
 
 If cb (callback) parameter is not provided then function will return Promise.
+
+```js
+dal.querySql({sql: 'SELECT ...', bind: [15]}).then(results => {}).catch(cb);
+dal.querySql('SELECT ...', [15]).then(results => {}).catch(cb);
+```
 
 <a name="API"></a>
 * [`selectOneRow`](#selectOneRow)
@@ -320,6 +325,7 @@ Invoke stored procedure with parameters.
 ```js
 var bindvars = {
     i:  'Chris',  // bind type is determined from the data type
+    i2: { fn: 'To_Date(?, \'yyyymmdd\')', bind: '20151023' },
     io: { val: 'Jones', dir : dal.BIND_INOUT },
     o:  { type: dal.NUMBER, dir : dal.BIND_OUT },
 }

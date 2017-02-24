@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "async": "^2.1.4",
+    "bluebird": "^3.4.7",
     "find-up": "^2.1.0",
     "fn-params-parser": "^1.0.1",
     "lodash": "^4.17.4",

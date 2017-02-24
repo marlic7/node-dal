@@ -480,7 +480,7 @@ describe('Data Access Layer simple test', function() {
         it('should throw Error: Wrong number of rows returned from database', function(done) {
             disableConsoleLogErrors();
             dal.selectOneRow('test_01', null, [], function(err) {
-                (err.message).should.containEql('Wrong number of rows returned from database (6)');
+                (err.message).should.containEql('Wrong number of rows returned from database!');
                 enableConsoleLogErrors();
                 done();
             });
@@ -559,9 +559,9 @@ describe('Data Access Layer simple test', function() {
         //});
 
         it('should run procedure and grab DBMS_OUTPUT', function(done) {
-            dal.runProcedure('test_proc_02', {}, { dbmsOutput: true }, function(err, results, output) {
+            dal.runProcedure('test_proc_02', {}, { dbmsOutput: true }, function(err, results) {
                 should.not.exist(err);
-                should.equal(output, 'start\nfinish');
+                should.equal(results.dbmsOutput, 'start\nfinish');
                 done();
             });
         });
@@ -609,8 +609,8 @@ describe('Data Access Layer simple test', function() {
             };
             dal.runProcedure('test_proc_04', params, { dbmsOutput: true }, function(err, results, output) {
                 should.not.exist(err);
-                should.equal(results.vInfo,    'Start process at: 2015.10.23 00:00:00');
-                should.equal(output,           'Start process at: 2015.10.23 00:00:00');
+                should.equal(results.vInfo,      'Start process at: 2015.10.23 00:00:00');
+                should.equal(results.dbmsOutput, 'Start process at: 2015.10.23 00:00:00');
                 should.deepEqual(results.vEndDate.toJSON(), (new Date('2015-10-24')).toJSON());
                 done();
             });

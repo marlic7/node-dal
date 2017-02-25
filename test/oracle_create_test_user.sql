@@ -1,10 +1,12 @@
- create user test_node_dal identified by password_please_change_me;
- alter user test_node_dal default tablespace users;
- alter user test_node_dal quota 500M on users;
- grant CREATE SESSION to test_node_dal;
- grant create table to test_node_dal;
- grant create view to test_node_dal;
- grant create sequence to test_node_dal;
- grant create procedure to test_node_dal;
- grant execute on dbms_lock to test_node_dal;
+ CREATE USER test_node_dal IDENTIFIED BY password_please_change_me;
+ ALTER USER test_node_dal DEFAULT TABLESPACE users;
+ ALTER USER test_node_dal QUOTA 500M ON users;
+ GRANT CREATE SESSION TO test_node_dal;
+ GRANT CREATE TABLE TO test_node_dal;
+ GRANT CREATE VIEW TO test_node_dal;
+ GRANT CREATE SEQUENCE TO test_node_dal;
+ GRANT CREATE PROCEDURE TO test_node_dal;
+ GRANT EXECUTE ON dbms_lock TO test_node_dal;
+ GRANT CREATE ANY CONTEXT TO user;
+ 
  quit;

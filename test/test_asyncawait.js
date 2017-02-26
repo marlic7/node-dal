@@ -1,7 +1,8 @@
 // setup MyError
 require("./lib/my-error");
 
-const _        = require('lodash'),
+const
+    _          = require('lodash'),
     should     = require('should'),
     async      = require('asyncawait/async'),
     await      = require('asyncawait/await'),
@@ -12,8 +13,8 @@ describe('Data Access Layer promises with asyncawait test', function() {
     let dal,
         tbls = ['testp_01', 'testp_02', 'testp_03', 'testp_04', 'testp_05'];
 
-    before(function (done) {
-        dalFactory('oracledb', conf, function (err, dalObj) {
+    before(done => {
+        dalFactory('oracledb', conf, (err, dalObj) => {
             if (err) {
                 done(err);
                 return;
@@ -25,61 +26,64 @@ describe('Data Access Layer promises with asyncawait test', function() {
 
     describe('prepare DB structure', function() {
 
-        it('should remove tables silently', function (done) {
-            let querySqlSilent = function(query) {
-                return new Promise(function (resolve) {
-                    dal.querySql(query, [], function (err, result) {
-                        resolve(result);
+        it('should remove tables silently', done => {
+            const
+                querySqlSilent = query => {
+                    return new Promise(resolve => {
+                        dal.querySql(query, [], (err, result) => {
+                            resolve(result);
+                        });
                     });
+                },
+                dropTabs = async(() => {
+                    return await(_.map(tbls, tbl => {
+                        return querySqlSilent(`DROP TABLE ${tbl}`);
+                    }));
                 });
-            };
-
-            let dropTabs = async(function() {
-                return await(_.map(tbls, function(tbl) {
-                    return querySqlSilent(`DROP TABLE ${tbl}`);
-                }));
-            });
 
             dropTabs()
-                .then(function(out) {
+                .then(out => {
                     should.equal(out.length, 5);
                     //should.deepEqual(out, {});
                     done();
                 })
-                .catch(function(err) { done(err) });
+                .catch(err => { done(err) });
         });
 
-        it('should create new tables', function (done) {
-            let createTabs = async(function() {
-                return await(_.map(tbls, function(tbl) {
+        it('should create new tables', done => {
+            const createTabs = async(() => {
+                return await(_.map(tbls, tbl => {
                     return dal.querySql(`CREATE TABLE ${tbl} (text VARCHAR2(20))`);
                 }));
             });
 
             createTabs()
-                .then(function(out) {
+                .then(out => {
                     should.equal(out.length, 5);
                     done();
                 })
-                .catch(function(err) { done(err) });
+                .catch(err => { done(err) });
         });
 
-        it('should async code run like sync', function (done) {
-            let doJob = async(function() {
-                let tabCnt1 = await(dal.selectOneValueSql("SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'")),
+        it('should async code run like sync', done => {
+            const doJob = async(() => {
+                const
+                    tabCnt1 = await(dal.selectOneValueSql("SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'")),
                     tabCnt2 = await(dal.selectOneValueSql({ sql: "SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'" }));
 
                 return [tabCnt1, tabCnt2];
             });
 
             doJob()
-                .then(function(out) {
+                .then(out => {
                     should.equal(out.length, 2);
                     should.deepEqual(out, [5, 5]);
                     done();
                 })
-                .catch(function(err) { done(err) });
+                .catch(err => {
+                    console.log('debug:', err.debug);
+                    done(err);
+                });
         });
     });
-
 });

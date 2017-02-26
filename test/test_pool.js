@@ -2,15 +2,16 @@
 // setup MyError
 require("./lib/my-error");
 
-var assert     = require('assert'),
+const 
+    assert     = require('assert'),
     conf       = require('./config').oracle,
     dalFactory = require('../lib/dalFactory');
 
 describe('Data Access Layer Pool test', function() {
-    var dal;
+    let dal;
 
-    before(function(done) {
-        dalFactory('oracledb', conf, function(err, dalObj) {
+    before(done => {
+        dalFactory('oracledb', conf, (err, dalObj) => {
             if(err) {
                 done(err);
                 return;
@@ -21,38 +22,39 @@ describe('Data Access Layer Pool test', function() {
     });
 
     describe('pool properties', function() {
-        var getPoolProps = function(pool) {
-            return {
-                connectionsInUse: pool.connectionsInUse,
-                connectionsOpen:  pool.connectionsOpen,
-                poolMax:          pool.poolMax
+        const
+            getPoolProps = pool => {
+                return {
+                    connectionsInUse: pool.connectionsInUse,
+                    connectionsOpen:  pool.connectionsOpen,
+                    poolMax:          pool.poolMax
+                };
+            },
+            expectedEmptyPool = {
+                connectionsInUse: 0,
+                connectionsOpen:  conf.connection.poolMin,
+                poolMax:          conf.connection.poolMax
             };
-        };
-        var expectedEmptyPool = {
-            connectionsInUse: 0,
-            connectionsOpen:  conf.connection.poolMin,
-            poolMax:          conf.connection.poolMax
-        };
 
-        it('pool should be empty', function(done) {
+        it('pool should be empty', done => {
             assert.deepEqual(getPoolProps(dal.getDbPool()), expectedEmptyPool);
             done();
         });
 
-        it('pool should be allocated', function(done) {
-            dal.getDbConnection(function(err, connection) {
+        it('pool should be allocated', done => {
+            dal.getDbConnection((err, connection) => {
                 if (err) {
                     done(err);
                     return;
                 }
-                var poolPropsAllocated = getPoolProps(dal.getDbPool());
-                connection.release(function(err) {
+                const poolPropsAllocated = getPoolProps(dal.getDbPool());
+                connection.release(err => {
                     if (err) {
                         done(err);
                         return;
                     }
 
-                    var poolPropsEmpty = getPoolProps(dal.getDbPool());
+                    const poolPropsEmpty = getPoolProps(dal.getDbPool());
 
                     assert.equal(1, poolPropsAllocated.connectionsInUse);
                     assert.equal(0, poolPropsEmpty.connectionsInUse);
@@ -60,8 +62,5 @@ describe('Data Access Layer Pool test', function() {
                 });
             });
         });
-
     });
-
-
 });

@@ -111,8 +111,17 @@ dal.querySql('SELECT ...', [15], callback);
 If cb (callback) parameter is not provided then function will return Promise.
 
 ```js
-dal.querySql({sql: 'SELECT ...', bind: [15]}).then(results => {}).catch(cb);
-dal.querySql('SELECT ...', [15]).then(results => {}).catch(cb);
+dal.querySql({sql: 'SELECT ...', bind: [15]})
+    .then(results => {
+        console.log(results);
+    })
+    .catch(cb);
+
+dal.querySql('SELECT ...', [15])
+    .then(results => {
+        console.log(results);
+    })
+    .catch(cb);
 ```
 
 <a name="API"></a>
@@ -327,8 +336,8 @@ var bindvars = {
     i:  'Chris',  // bind type is determined from the data type
     i2: { fn: 'To_Date(?, \'yyyymmdd\')', bind: '20151023' },
     io: { val: 'Jones', dir : dal.BIND_INOUT },
-    o:  { type: dal.NUMBER, dir : dal.BIND_OUT },
-}
+    o:  { type: dal.NUMBER, dir : dal.BIND_OUT }
+};
 dal.runProcedure('procedure01', bindvars, function(err, results) {
     if(err) {
         cb(new Error(err));
@@ -368,7 +377,7 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
         return;
     }
 
-    cb(null, results);
+    cb(null, result);
 });
 ```
 [`API`](#API)
@@ -389,7 +398,7 @@ dal.insertReturningId('test_01', {id: {type:'pk'}, text: 'test11'}, 'test_01_sid
         return;
     }
 
-    cb(null, results);
+    cb(null, result);
 });
 ```
 [`API`](#API)
@@ -408,7 +417,7 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [{typ
         return;
     }
 
-    cb(null, results);
+    cb(null, result);
 });
 ```
 [`API`](#API)
@@ -430,7 +439,7 @@ dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, r
         return;
     }
 
-    cb(null, results);
+    cb(null, result);
 });
 ```
 [`API`](#API)
@@ -451,7 +460,7 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
         return;
     }
 
-    cb(null, results);
+    cb(null, result);
 });
 ```
 [`API`](#API)
@@ -555,17 +564,17 @@ var driver = dal.getDriver();
 
 selected fields:
 ```js
-['field1', 'field2', 'field3']
+const fields = ['field1', 'field2', 'field3'];
 ```
 
 all fields:
 ```js
-null
+const fields = null;
 ```
 
 only one field:
 ```js
-'fieldX'
+const fields = 'fieldX';
 ```
 [`API`](#API)
 
@@ -576,7 +585,7 @@ only one field:
 
 as a array:
 ```js
-[
+const where = [
    [ 'field LIKE ?', '%ola%' ], // operator AND is default
    [ 'field2 IS NULL', null, 'OR' ],
    {
@@ -589,8 +598,8 @@ as a array:
 ]
 ```
 as a object (only AND clouse and equity (=) operator):
-```json
-{
+```js
+const where = {
     "field1": 100,
     "field2": "abc"
 }
@@ -619,8 +628,8 @@ var data = {
 #### order
 
 ```js
-var order_v1 = ['field1', ['field2', 'DESC']]
-var order_v2 = ['field1', 'field2 DESC']
+var order_v1 = ['field1', ['field2', 'DESC']];
+var order_v2 = ['field1', 'field2 DESC'];
 ```
 [`API`](#API)
 

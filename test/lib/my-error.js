@@ -22,7 +22,7 @@ MyError = global.MyError = function (msg, debug) {
         _error.message = msg.message.replace('Error: Error: ', 'Error: ').trim();
     }
 
-    console.error(_error.stack, debug);
+    // console.error(_error.stack, debug);
 
     return _error;
 };

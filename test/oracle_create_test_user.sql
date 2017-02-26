@@ -7,6 +7,6 @@
  GRANT CREATE SEQUENCE TO test_node_dal;
  GRANT CREATE PROCEDURE TO test_node_dal;
  GRANT EXECUTE ON dbms_lock TO test_node_dal;
- GRANT CREATE ANY CONTEXT TO user;
+ GRANT CREATE ANY CONTEXT TO test_node_dal;
  
  quit;

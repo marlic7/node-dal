@@ -3,7 +3,7 @@
  * @type {global.MyError}
  */
 MyError = global.MyError = function (msg, debug) {
-    var _error = Error.call(Error, msg); // create object with it
+    const _error = Error.call(Error, msg); // create object with it
 
     _error.debug = [];
     if (msg && msg.debug) {

@@ -127,17 +127,25 @@ describe('Data Access Layer simple test', function() {
             });
         });
 
-        // to narazie nie działa czekamy na implementację od Oracle (fetchAsString dla CLOB)
-        //it('should get CLOB value (fake)', done => {
-        //    dal.selectOneValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], (err, result) => {
-        //        if(err) {
-        //            done(err);
-        //            return;
-        //        }
-        //        should.equal(result, 'test1');
-        //        done();
-        //    });
-        //});
+        it('should get CLOB value by selectOneValueSql if opt.fetchClobs provided', done => {
+           dal.selectOneValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], { fetchClobs: true }, (err, result) => {
+               if(err) {
+                   done(err);
+                   return;
+               }
+               should.equal(result.length, 120000);
+               done();
+           });
+        });
+
+        it('should get CLOB value (promise)', done => {
+            dal.selectOneClobValue('test_02', 'text_clob', ['id = ?', 1])
+                .then(result => {
+                    should.equal(result.length, 120000);
+                    done();
+                })
+                .catch(done);
+        });
 
         it('should get CLOB value', done => {
             dal.selectOneClobValue('test_02', 'text_clob', ['id = ?', 1], (err, result) => {

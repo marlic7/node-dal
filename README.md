@@ -1,4 +1,4 @@
-# node-dal version 2.4.3 (Node.js Database Abstraction Layer)
+# node-dal version 2.5.0 (Node.js Database Abstraction Layer)
 
 This is yet another database abstraction layer.
 
@@ -21,7 +21,7 @@ This library is not:
 
 ## Documentation
 
-### Instalation
+### Installation
 
 ```bash
 npm install --save node-dal
@@ -35,13 +35,13 @@ var dalFactory = require('node-dal'),
     conf       = require('./config');
 
     dalFactory('oracledb', conf)
-        .then(function(dal) {
+        .then(dal => {
             return dal.querySql('select ...')
         })
-        .then(function(results) {
+        .then(results => {
             console.log(results);
         })
-        .catch(function(err) {
+        .catch(err => {
             console.log(err.message);
         });        
 ```
@@ -67,6 +67,7 @@ module.exports = {
             time_zone:       '00:00', // fix for bad date cast by oracledb when read
             nls_date_format: 'yyyy-mm-dd'
         },
+        dbVer: '12',
         outFormat: 'object' // array/object
     },
     other: {}
@@ -89,10 +90,10 @@ npm test
 npm run testperf
 ```
 
-Library was successfuly tested with:
-DB: Oracle 11g XE, 11g EE, 12c EE
-Node.js: v6.2.1
-OS: Ubuntu 16.04
+Library was successfully tested with:
+- DB: Oracle 12c EE
+- Node.js: v6.2.1
+- OS: Ubuntu 16.04
 
 ## API
 
@@ -102,7 +103,7 @@ All methods parameters could be pass in two ways:
 * as a object with proper named keys
 * as a list in proper order
 
-For example both below aproach are equivalent:
+For example both below approach are equivalent:
 ```js
 dal.querySql({sql: 'SELECT ...', bind: [15], cb: callback});
 dal.querySql('SELECT ...', [15], callback);
@@ -149,30 +150,39 @@ dal.querySql('SELECT ...', [15])
 ---
 
 <a name="selectOneRow"></a>
-**selectOneRow**  (tbl:string, [fields:Array|null], where:Array, [opt:object|null], cb:function)
+**selectOneRow**  (tbl:string, [fields:Array|null], where:Array, [opt:object|null], [cb:function])
 
 see params details: [`fields`](#params-fields) [`where`](#params-where) [`opt`](#params-opt)
 
 Fetch only one record (row) from table or view.
 Request have to return max one record otherwise error will be thrown.
 
-Example:
+Examples:
 
 ```js
-dal.selectOneRow('test_01', null, ['id = ?', 10], function(err, result) {
+dal.selectOneRow('test_01', null, ['id = ?', 10], (err, result) => {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectOneRow('test_01', null, ['id = ?', 10])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectOneRowSql"></a>
-**selectOneRowSql** (sql:string, bind:object|Array, [opt:object|null], cb:function)
+**selectOneRowSql** (sql:string, bind:object|Array, [opt:object|null], [cb:function])
 
 see params details: [`opt`](#params-opt)
 
@@ -180,20 +190,29 @@ Fetch only one record (row) from table or view.
 Request have to return max one record otherwise error will be thrown.
 
 ```js
-dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], function(err, result) {
+dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], (err, result) => {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectOneValue"></a>
-**selectOneValue** (tbl:string, field:string, where:Array|object, cb:function)
+**selectOneValue** (tbl:string, field:string, where:Array|object, [cb:function])
 
 see params details: [`where`](#params-where)
 
@@ -201,20 +220,29 @@ Fetch one value of specific field from table or view.
 Request have to return max one record otherwise error will be thrown.
 
 ```js
-dal.selectOneValue('test_01', 'text',  ['id = ?', 10], function(err, result) {
+dal.selectOneValue('test_01', 'text',  ['id = ?', 10], (err, result) => {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectOneValue('test_01', 'text',  ['id = ?', 10])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectOneValueSql"></a>
-**selectOneValueSql**  (sql:string, bind:object|Array, [opt:object|null], cb:function)
+**selectOneValueSql**  (sql:string, bind:object|Array, [opt:object|null], [cb:function])
 
 see params details: [`opt`](#params-opt)
 
@@ -222,38 +250,56 @@ Fetch one value of specific field from table or view.
 Request have to return max one record otherwise error will be thrown.
 
 ```js
-dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10], function(err, result) {
+dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10], (err, result) => {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectOneClobValue"></a>
-**selectOneClobValue** (tbl:string, field:string, bind:object|Array, cb:function)
+**selectOneClobValue** (tbl:string, field:string, bind:object|Array, [cb:function])
 
 Only for Oracle driver.
 
 ```js
-dal.selectOneClobValue('test_01', 'text_clob', ['id = ?', 10], function(err, result) {
+dal.selectOneClobValue('test_01', 'text_clob', ['id = ?', 10], (err, result) => {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectOneClobValue('test_01', 'text_clob', ['id = ?', 10])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectOneClobValueSql"></a>
-**selectOneClobValueSql** (sql:string, bind:object|Array, [opt:object|null], cb:function)
+**selectOneClobValueSql** (sql:string, bind:object|Array, [opt:object|null], [cb:function])
 
 see params details: [`opt`](#params-opt)
 
@@ -262,56 +308,83 @@ Only for Oracle driver.
 ```js
 dal.selectOneClobValueSql('SELECT text_clob FROM test_01 WHERE id=:0', [10], function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectOneClobValueSql('SELECT text_clob FROM test_01 WHERE id=:0', [10])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectAllRows"></a>
-**selectAllRows** (tbl:string, [fields:Array|null], [where:Array|object|null], [order:Array|string|null], [opt:object|null], cb:function)
+**selectAllRows** (tbl:string, [fields:Array|null], [where:Array|object|null], [order:Array|string|null], [opt:object|null], [cb:function])
 
 see params details: [`fields`](#params-fields) [`where`](#params-where) [`order`](#params-order) [`opt`](#params-opt)
 
 ```js
-dal.selectAllRows('test_01', null, null, null, {outFormat: 'array', limit:10, page:5}, function(err, result) {
+dal.selectAllRows('test_01', null, null, null, { outFormat: 'array', limit:10, page:5 }, function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, result);
+    console.log(result);
 });
+
+// with promise
+dal.selectAllRows('test_01', null, null, null, { outFormat: 'array', limit:10, page:5 })
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="selectAllRowsSql"></a>
-**selectAllRowsSql** (sql:string, bind:object|Array, [opt:object|null], cb:function)
+**selectAllRowsSql** (sql:string, bind:object|Array, [opt:object|null], [cb:function])
 
 see params details: [`opt`](#params-opt)
 
 ```js
-dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'], function(err, results) {
+dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'], function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, results);
+    console.log(result);
 });
+
+// with promise
+dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'])
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 [`API`](#API)
 
 ---
 
 <a name="querySql"></a>
-**querySql** (sql:string, [bind:object|Array], [opt:object|null], cb:function)
+**querySql** (sql:string, [bind:object|Array], [opt:object|null], [cb:function])
 
 see params details: [`opt`](#params-opt)
 
@@ -325,7 +398,7 @@ dal.querySql('DROP TABLE test_01', [], done);
 ---
 
 <a name="runProcedure"></a>
-**runProcedure** (procName:string, bind:object|Array, [optProc:object], cb:function)
+**runProcedure** (procName:string, bind:object|Array, [optProc:object], [cb:function])
 
 see params details: [`optProc`](#params-opt-proc)
 
@@ -338,26 +411,35 @@ var bindvars = {
     io: { val: 'Jones', dir : dal.BIND_INOUT },
     o:  { type: dal.NUMBER, dir : dal.BIND_OUT }
 };
-dal.runProcedure('procedure01', bindvars, function(err, results) {
+dal.runProcedure('procedure01', bindvars, function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, results);
+    console.log(result);
 });
+
+// with promise
+dal.runProcedure('procedure01', bindvars)
+    .then(result => {
+        console.log(result);
+    })
+    .catch(err => {
+        console.error(err.message);
+    });
 ```
 
 Invoke stored procedure and grab dbmsOutput
 
 ```js
-dal.runProcedure('procedure02', {}, {dbmsOutput: true}, function(err, results, output) {
+dal.runProcedure('procedure02', {}, {dbmsOutput: true}, function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, results, output);
+    console.log(result);
 });
 ```
 
@@ -366,18 +448,18 @@ dal.runProcedure('procedure02', {}, {dbmsOutput: true}, function(err, results, o
 ---
 
 <a name="insert"></a>
-**insert** (tbl:string, data:object, cb:function)
+**insert** (tbl:string, data:object, [cb:function])
 
 see params details: [`data`](#params-data)
 
 ```js
 dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, result);
+    console.log(result);
 });
 ```
 [`API`](#API)
@@ -385,7 +467,7 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
 ---
 
 <a name="insertReturningId"></a>
-**insertReturningId** (tbl:string, data:object, seqence:string, cb:function)
+**insertReturningId** (tbl:string, data:object, seqence:string, [cb:function])
 
 see params details: [`data`](#params-data)
 
@@ -394,11 +476,11 @@ Invoke INSERT operation with unique ID fetched from sequence and returns that ID
 ```js
 dal.insertReturningId('test_01', {id: {type:'pk'}, text: 'test11'}, 'test_01_sid', function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, result);
+    console.log(result);
 });
 ```
 [`API`](#API)
@@ -406,18 +488,18 @@ dal.insertReturningId('test_01', {id: {type:'pk'}, text: 'test11'}, 'test_01_sid
 ---
 
 <a name="insertReturningIdSql"></a>
-**insertReturningIdSql** (sql:string, bind:object|Array, seqence:string, cb:function)
+**insertReturningIdSql** (sql:string, bind:object|Array, seqence:string, [cb:function])
 
 Invoke INSERT operation with unique ID fetched from sequence and returns that ID (SQL version).
 
 ```js
 dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [{type:'pk'},'test10'], 'test_01_sid', function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, result);
+    console.log(result);
 });
 ```
 [`API`](#API)
@@ -425,7 +507,7 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [{typ
 ---
 
 <a name="update"></a>
-**update** (tbl:string, data:object, where:Array|object, cb:function)
+**update** (tbl:string, data:object, where:Array|object, [cb:function])
 
 see params details: [`where`](#params-where) [`data`](#params-data)
 
@@ -435,11 +517,11 @@ Only fields in given data parameter object (simple key:value) will be modified f
 ```js
 dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, result);
+    console.log(result);
 });
 ```
 [`API`](#API)
@@ -447,7 +529,7 @@ dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, r
 ---
 
 <a name="del"></a>
-**del**  (tbl:string, where:Array|object, cb:function)
+**del**  (tbl:string, where:Array|object, [cb:function])
 
 see params details: [`where`](#params-where)
 
@@ -456,11 +538,11 @@ Delete record or records.
 ```js
 dal.del('test_01', ['id = ?', 999], function(err, result) {
     if(err) {
-        cb(new Error(err));
+        console.error(err.message);
         return;
     }
 
-    cb(null, result);
+    console.log(result);
 });
 ```
 [`API`](#API)
@@ -468,7 +550,7 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
 ---
 
 <a name="executeTransaction"></a>
-**executeTransaction**  (sqlBindArray:Array, cb:function)
+**executeTransaction**  (sqlBindArray:Array, [cb:function])
 
 Execute simple transaction.
 Either all queries from array will be succesful perform or none of them.
@@ -476,7 +558,7 @@ Either all queries from array will be succesful perform or none of them.
 It could be used for multi DDL instructions but in such case transaction won't be work.
 
 ```js
-var sqlBindArray = [
+const sqlBindArray = [
     ['INSERT INTO test_01 VALUES (:0, :1)', [131, 'T01']],
     ['UPDATE test_01 SET text = :0 WHERE id = :1', ['T02', 131]],
     ['UPDATE test_01 SET text = :0 WHERE id = :1', ['AAB', 124]],
@@ -498,34 +580,25 @@ dal.executeTransaction(sqlBindArray, function(err, results) {
 ---
 
 <a name="getDbConnection"></a>
-**getDbConnection**  (cb:function, [probes:number], [waitTime:number])
+**getDbConnection**  ([cb:function])
 
-Get connection from pool to perform operation using orgin db driver methods.
+Get connection from pool to perform operation using origin db driver methods.
 
 ```js
-dal.getDbConnection(function(err, connection){
-    if (err) {
-        cb(new Error(err));
-        return;
-    }
-
-    connection.execute(sql, bind, {outFormat: dal.OBJECT}, function(err, result) {
-        if (err) {
-            cb(new Error(err));
-            return;
-        }
-
-        /* Release the connection back to the connection pool */
-        connection.release(function(err) {
-            if (err) {
-                cb(new Error(err));
-                return;
-            }
-
-            cb(null, result);
-        });
-    });
-});
+let _result, _conn;
+dal.getDbConnection()
+    .then(connection => {
+        _conn = connection;
+        return connection.execute(sql, bind, { outFormat: dal.OBJECT });
+    })
+    .then(result => {
+        _result = result;
+        return _conn.release();
+    })
+    .then(() => {
+        cb(null, _result);
+    })
+    .catch(cb);
 ```
 [`API`](#API)
 
@@ -537,7 +610,7 @@ dal.getDbConnection(function(err, connection){
 Get orgin connection pool (one from driver or generic pool if driver hasn't pool').
 
 ```js
-var dbPool = dal.getDbPool();
+const dbPool = dal.getDbPool();
 ```
 [`API`](#API)
 
@@ -549,7 +622,7 @@ var dbPool = dal.getDbPool();
 Get orgin db driver object.
 
 ```js
-var driver = dal.getDriver();
+const driver = dal.getDriver();
 ```
 [`API`](#API)
 
@@ -612,7 +685,7 @@ const where = {
 #### data
 
 ```js
-var data = {
+const data = {
     field1: { type: 'sequence', name: 'seq_name' },
     field2: "value1",
     field3: { type: 'function', name: 'fn_name' },
@@ -628,8 +701,8 @@ var data = {
 #### order
 
 ```js
-var order_v1 = ['field1', ['field2', 'DESC']];
-var order_v2 = ['field1', 'field2 DESC'];
+const order_v1 = ['field1', ['field2', 'DESC']];
+const order_v2 = ['field1', 'field2 DESC'];
 ```
 [`API`](#API)
 
@@ -639,7 +712,7 @@ var order_v2 = ['field1', 'field2 DESC'];
 
 
 ```js
-var opt = {
+const opt = {
     outFormat: 'array', // return results as Array instead of object (object like JSON is default behavior for this library)
     limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with curent row number
     page: 5,            // page number to fetch,
@@ -655,7 +728,7 @@ var opt = {
 
 
 ```js
-var optProc = {
+const optProc = {
     dbmsOutput: true // fetch all DBMS_OUTPUT.PUT_LINE from procedure and put that string as last callback argument
 }
 ```

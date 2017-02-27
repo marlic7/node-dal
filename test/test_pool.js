@@ -7,7 +7,7 @@ const
     conf       = require('./config').oracle,
     dalFactory = require('../lib/dalFactory');
 
-describe('Data Access Layer Pool test', function() {
+describe('Data Access Layer Pool tests', function() {
     let dal;
 
     before(done => {

@@ -1,11 +1,12 @@
 {
   "name": "node-dal",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
     "test": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' mocha -R spec --timeout 15000 ./test/",
     "testperf": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' mocha -R spec --timeout 150000 ./test/perf/",
+    "changelog": "git changelog -a -n -x > changelog.txt",
     "eslint": "eslint ./libs ./tests"
   },
   "engines": {

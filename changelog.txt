@@ -1,48 +1,153 @@
-v2.4.0
-- auto fetch CLOB fields in: selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql (required opt fetchClobs = true)
-- replace _.noop with getNoopCallback (posible logging errors in connection release)
-- async@2.1.1
 
-v2.3.0
-- added new methods: selectOneClobValue, selectOneClobValueSql (in future will replace: selectClobValueSql)
-- adoptation for oracledb@1.11.0
+n.n.n / 2017-02-27
+==================
 
-v2.2.0
-- changes in insertReturningId and insertReturningIdSql - bind parameter require one
-  item with value = { type: 'pk' } for primary key field which have sequence from sequence parameter
 
-v2.1.0
-- new config property: outFormat: 'object|array' for sets global out data format
 
-v2.0.1
-- alternative promisify all methods
-- replace argsParser with external module fn-params-parser
-- remove own Oracle queue implementation (oracledb now has it)
+2.5.0 / 2017-02-27
+==================
 
-v1.2.1
-- remove grunt for npm run
-- replace jshint with eslint
-- fix code to new eslint rules
+  * some improvements in methods fetching CLOBS, fix doc, new ver @2.5.0
+  * deep refactoring to ES6
+  * spell fix for sequence, sql script changed
+  * deep refactoring to ES6  (tbc...)
+  * more ES6
+  * @2.4.3
 
-v1.2.0
-- adoptation for oracledb@1.9.3 and Node.js v6
-- upgrade dependencies
+2.4.3 / 2017-01-19
+==================
 
-v1.1.0
-- adoptation for oracledb@1.3.0
-- in runProcedure added new param with options and first param value {dbmsOutput: true} which fetches DBMS_OUTPUT.PUT_LINE
-- automaticly sets nls_session_parameters from config
+  * fix error for scenario with null in bind for runProcedure
 
-v1.0.3
-- adoptation for oracledb@1.2.0
-- fix lob release event from 'end' to 'close' for oracledb@1.2.0
+2.4.2 / 2017-01-10
+==================
 
-v1.0.2
-- fix doc
-- relaxation required oracledb driver version (before requiredVer = 'x.y.z' after requiredVer = '~x.y.z')
+  * oracle-prepare-sql@1.1.1
 
-v1.0.1
-- fix doc
+2.4.1 / 2017-01-07
+==================
 
-v1.0.0
-- first public release
+  * upgrade dependencies & support for oracledb@1.12.2
+
+2.4.0 / 2016-10-13
+==================
+
+  * auto fetch CLOB fields in: selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql (required opt fetchClobs = true)
+
+2.3.0 / 2016-10-11
+==================
+
+  * new methods: selectOneClobValue, selectOneClobValueSql and support for oracledb@1.11.0
+
+2.2.2 / 2016-09-13
+==================
+
+  * paging for Oracle>=12 with OFFSET clouse
+
+2.2.1 / 2016-09-01
+==================
+
+  * bump ver to 2.2.1
+  * fix where param as object in selectOneRow, add dbmsOutput to results in runProcedure in case of promise based API, new tests
+
+2.2.0 / 2016-08-24
+==================
+
+  * changes in insertReturningId and insertReturningIdSql
+
+2.1.1 / 2016-07-17
+==================
+
+  * dalFactory now is promise based, tests on 12c, bump oracledb to 1.10.0
+
+2.1.0 / 2016-06-17
+==================
+
+  * new config property: outFormat
+  * indent fix
+  * small doc fix
+
+2.0.1 / 2016-06-16
+==================
+
+  * fix docs
+
+2.0.0 / 2016-06-15
+==================
+
+  * bump ver to 2.0.0
+  * remove own getConn queue implementation, prefer env variables over nlsSessionParameters
+  * replace argsParser with external module fn-params-parser
+  * alternative promisify all methods like in oracledb, add test with Promise based method version, replace underscore with lodash, new arg parser and tests for it
+  * fix tests
+  * rozgrzebane testy, problem z mocha i conn.release
+  * replace jshint with eslint and fix code to new eslint rules
+  * replace grunt with npm run, replace findup-sync with find-up
+
+1.2.0 / 2016-06-07
+==================
+
+  * support for oracledb@1.9.3 and Node.js v6 and deps upgrade
+  * SQL to create testy user
+
+1.1.6 / 2016-02-09
+==================
+
+  * test and support for oracledb@1.6.0
+  * fix version
+  * fix doc
+
+1.1.5 / 2015-12-28
+==================
+
+  * support for oracledb@1.5.0
+
+1.1.3 / 2015-11-18
+==================
+
+  * support for oracledb@1.4.0
+  * fix
+  * memory consumption test second
+  * memory consumption test
+
+1.1.2 / 2015-11-04
+==================
+
+  * important note in README
+  * fix keywords
+  * fix version no
+
+1.1.1 / 2015-10-28
+==================
+
+  * fix params issue, simplify parameters parser
+
+1.1.0 / 2015-10-23
+==================
+
+  * automaticly sets nls_session_parameters from config
+  * not finished
+  * in runProcedure added new param with options, first param value {dbmsOutput: true} which fetches DBMS_OUTPUT.PUT_LINE adoptation for oracledb@1.3.0
+
+1.0.3 / 2015-10-01
+==================
+
+  * support for oracledb@1.2.0
+
+1.0.2 / 2015-09-15
+==================
+
+  * translation forgotten fragments, relaxation required oracledb driver version, added info about tests
+
+1.0.1 / 2015-09-13
+==================
+
+  * fix doc @1.0.1
+
+1.0.0 / 2015-09-13
+==================
+
+  * experiments with markdown
+  * experiments with markdown
+  * fix doc
+  * first version for public share

@@ -9,7 +9,7 @@ const
     conf       = require('./config').oracle,
     dalFactory = require('../lib/dalFactory');
 
-describe('Data Access Layer promises with asyncawait test', function() {
+describe('Data Access Layer promises with asyncawait tests', function() {
     let dal,
         tbls = ['testp_01', 'testp_02', 'testp_03', 'testp_04', 'testp_05'];
 

@@ -550,7 +550,9 @@ dal.del('test_01', ['id = ?', 999], function(err, result) {
 ---
 
 <a name="executeTransaction"></a>
-**executeTransaction**  (sqlBindArray:Array, [cb:function])
+**executeTransaction**  (sqlBindArray:Array, [opt:object], [cb:function])
+
+see params details: [`opt`](#params-opt)
 
 Execute simple transaction.
 Either all queries from array will be succesful perform or none of them.
@@ -717,7 +719,12 @@ const opt = {
     limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with curent row number
     page: 5,            // page number to fetch,
     totalCount: true,   // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
-    fetchClobs: true    // auto fetch all data for CLOB-s (works with:  selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql)
+    fetchClobs: true,   // auto fetch all data for CLOB-s (works with:  selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql)
+    sessionCtx: [{      // automatically sets session context attributes values of current connection 
+        ctxProcedureName: 'set_ctx_node_dal',
+        ctxAttribute: 'current_id',
+        ctxValue: '10'
+    }]
 }
 ```
 [`API`](#API)
@@ -729,7 +736,8 @@ const opt = {
 
 ```js
 const optProc = {
-    dbmsOutput: true // fetch all DBMS_OUTPUT.PUT_LINE from procedure and put that string as last callback argument
+    dbmsOutput: true, // fetch all DBMS_OUTPUT.PUT_LINE from procedure and put that string as last callback argument
+    sessionCtx: []    // see: opt.sessionCtx
 }
 ```
 [`API`](#API)

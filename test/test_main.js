@@ -12,7 +12,7 @@ const
     dalFactory = require('../lib/dalFactory'),
     MyErrorOrgin = MyError;
 
-describe('Data Access Layer simple test', function() {
+describe('Data Access Layer common tests', function() {
     const
         clob_1 = randomString(120000),
         clob_2 = randomString(5000),
@@ -306,7 +306,7 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should do transaction and commit with executeTransaction', done => {
-            var sqlBinds = [
+            const sqlBinds = [
                 ['INSERT INTO test_01 VALUES (:0, :1)', [131, 'T01']],
                 ['UPDATE test_01 SET text = :0 WHERE id = :1', ['T02', 131]],
                 ['UPDATE test_01 SET text = :0 WHERE id = :1', ['AAB', 124]],
@@ -686,6 +686,44 @@ describe('Data Access Layer simple test', function() {
         });
     });
 
+    describe('test session context', function() {
+        it('should create or replace CONTEXT', done => {
+            dal.querySql('CREATE OR REPLACE CONTEXT CTX_NODE_DAL USING set_ctx_node_dal', [], done);
+        });
+
+        it('should create or replace procedure for ctx attr sets', done => {
+            const sql = `CREATE OR REPLACE PROCEDURE set_ctx_node_dal(p_name VARCHAR2, p_val VARCHAR2) AUTHID definer IS   
+                         BEGIN  
+                             DBMS_SESSION.set_context('CTX_NODE_DAL', p_name, p_val);  
+                         END;`;
+            dal.querySql(sql, [], done);
+        });
+
+        it('should create or replace view with session ctx parameter', done => {
+            const sql = `CREATE OR REPLACE VIEW test_01_v AS   
+                             SELECT *
+                             FROM   test_01
+                             WHERE  id = Sys_Context('CTX_NODE_DAL', 'current_id')`;
+            dal.querySql(sql, [], done);
+        });
+
+        it('should fetch only one record from view after proper set session ctx', done => {
+            const ctxOpt = {
+                ctxProcedureName: 'set_ctx_node_dal',
+                ctxAttribute: 'current_id',
+                ctxValue: '10'
+            };
+
+            dal.selectAllRows({ tbl: 'test_01_v', opt: { sessionCtx: ctxOpt } })
+                .then(result => {
+                    should.equal(result.length, 1);
+                    should.deepEqual(result[0], { ID:10, TEXT: "text_10" });
+                    done();
+                })
+                .catch(done);
+        });
+    });
+
     describe('drop objects - clean schema', function() {
         it('should drop test_01 table', done => {
             dal.querySql('DROP TABLE test_01', [], done);
@@ -708,10 +746,13 @@ describe('Data Access Layer simple test', function() {
         });
 
         it('should drop procedures', done => {
-            var procs = [
+            const
+                procs = [
                     'test_proc_01',
                     'test_proc_02',
-                    'test_proc_03'
+                    'test_proc_03',
+                    'test_proc_04',
+                    'set_ctx_node_dal'
                 ],
                 sqls = procs.map(p => ['DROP PROCEDURE ' + p, []]);
             dal.executeTransaction(sqls, done);
@@ -729,9 +770,9 @@ describe('Data Access Layer simple test', function() {
 
 function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var randomString = '';
-    for (var i = 0; i < len; i++) {
-        var randomPoz = Math.floor(Math.random() * charSet.length);
+    let randomString = '';
+    for (let i = 0; i < len; i++) {
+        const randomPoz = Math.floor(Math.random() * charSet.length);
         randomString += charSet.substring(randomPoz,randomPoz+1);
     }
     return randomString;

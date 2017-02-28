@@ -128,14 +128,14 @@ describe('Data Access Layer common tests', function() {
         });
 
         it('should get CLOB value by selectOneValueSql if opt.fetchClobs provided', done => {
-           dal.selectOneValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], { fetchClobs: true }, (err, result) => {
-               if(err) {
-                   done(err);
-                   return;
-               }
-               should.equal(result.length, 120000);
-               done();
-           });
+            dal.selectOneValueSql('SELECT text_clob FROM test_02 WHERE id=:0', [1], { fetchClobs: true }, (err, result) => {
+                if(err) {
+                    done(err);
+                    return;
+                }
+                should.equal(result.length, 120000);
+                done();
+            });
         });
 
         it('should get CLOB value (promise)', done => {
@@ -183,7 +183,7 @@ describe('Data Access Layer common tests', function() {
         });
 
         it('insert should throw Error if given wrong sequence name (SQL version)', done => {
-            dal.insertReturningIdSql(sql_1, [{ type: 'pk' }, 'test10'], 'fake_seq_name', (err, result) => {
+            dal.insertReturningIdSql(sql_1, [{ type: 'pk' }, 'test10'], 'fake_seq_name', err => {
                 should(err).be.instanceOf(Error);
                 should(err.message).match(/ORA-02289/);
                 should(err).have.property('debug');
@@ -194,7 +194,7 @@ describe('Data Access Layer common tests', function() {
 
         it('insert should throw Error if wrong second bind parameter type (SQL version)', done => {
             const bind = [{ type: 'pk' }, { fake: true }];
-            dal.insertReturningIdSql(sql_1, bind, seq_1, (err, result) => {
+            dal.insertReturningIdSql(sql_1, bind, seq_1, err => {
                 should(err).be.instanceOf(Error);
                 should(err.message).match(/NJS-044/);
                 should(err).have.property('debug');
@@ -641,7 +641,7 @@ describe('Data Access Layer common tests', function() {
                 vInfo:      { type: dal.STRING, dir : dal.BIND_OUT },
                 vEndDate:   { type: dal.DATE,   dir : dal.BIND_OUT }
             };
-            dal.runProcedure('test_proc_04', params, { dbmsOutput: true }, (err, results, output) => {
+            dal.runProcedure('test_proc_04', params, { dbmsOutput: true }, (err, results) => {
                 should.not.exist(err);
                 should.equal(results.vInfo,      'Start process at: 2015.10.23 00:00:00');
                 should.equal(results.dbmsOutput, 'Start process at: 2015.10.23 00:00:00');
@@ -692,15 +692,15 @@ describe('Data Access Layer common tests', function() {
         });
 
         it('should create or replace procedure for ctx attr sets', done => {
-            const sql = `CREATE OR REPLACE PROCEDURE set_ctx_node_dal(p_name VARCHAR2, p_val VARCHAR2) AUTHID definer IS   
-                         BEGIN  
-                             DBMS_SESSION.set_context('CTX_NODE_DAL', p_name, p_val);  
+            const sql = `CREATE OR REPLACE PROCEDURE set_ctx_node_dal(p_name VARCHAR2, p_val VARCHAR2) AUTHID definer IS
+                         BEGIN
+                             DBMS_SESSION.set_context('CTX_NODE_DAL', p_name, p_val);
                          END;`;
             dal.querySql(sql, [], done);
         });
 
         it('should create or replace view with session ctx parameter', done => {
-            const sql = `CREATE OR REPLACE VIEW test_01_v AS   
+            const sql = `CREATE OR REPLACE VIEW test_01_v AS
                              SELECT *
                              FROM   test_01
                              WHERE  id = Sys_Context('CTX_NODE_DAL', 'current_id')`;

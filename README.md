@@ -1,5 +1,7 @@
 # node-dal version 2.5.0 (Node.js Database Abstraction Layer)
 
+[![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
+
 This is yet another database abstraction layer.
 
 It purpose is to be:
@@ -720,7 +722,7 @@ const opt = {
     page: 5,            // page number to fetch,
     totalCount: true,   // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
     fetchClobs: true,   // auto fetch all data for CLOB-s (works with:  selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql)
-    sessionCtx: [{      // automatically sets session context attributes values of current connection 
+    sessionCtx: [{      // automatically sets session context attributes values of current connection
         ctxProcedureName: 'set_ctx_node_dal',
         ctxAttribute: 'current_id',
         ctxValue: '10'

@@ -214,9 +214,9 @@ dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [])
 ---
 
 <a name="selectOneValue"></a>
-**selectOneValue** (tbl:string, field:string, where:Array|object, [cb:function])
+**selectOneValue** (tbl:string, field:string, where:Array|object, [opt:object|null], [cb:function])
 
-see params details: [`where`](#params-where)
+see params details: [`where`](#params-where) [`opt`](#params-opt)
 
 Fetch one value of specific field from table or view.
 Request have to return max one record otherwise error will be thrown.
@@ -274,7 +274,9 @@ dal.selectOneValueSql('SELECT text FROM test_01 WHERE id=:0', [10])
 ---
 
 <a name="selectOneClobValue"></a>
-**selectOneClobValue** (tbl:string, field:string, bind:object|Array, [cb:function])
+**selectOneClobValue** (tbl:string, field:string, bind:object|Array, [opt:object|null], [cb:function])
+
+see params details: [`opt`](#params-opt)
 
 Only for Oracle driver.
 
@@ -400,9 +402,9 @@ dal.querySql('DROP TABLE test_01', [], done);
 ---
 
 <a name="runProcedure"></a>
-**runProcedure** (procName:string, bind:object|Array, [optProc:object], [cb:function])
+**runProcedure** (procName:string, bind:object|Array, [opt:object|null], [cb:function])
 
-see params details: [`optProc`](#params-opt-proc)
+see params details: [`opt`](#params-opt)
 
 Invoke stored procedure with parameters.
 
@@ -450,9 +452,9 @@ dal.runProcedure('procedure02', {}, {dbmsOutput: true}, function(err, result) {
 ---
 
 <a name="insert"></a>
-**insert** (tbl:string, data:object, [cb:function])
+**insert** (tbl:string, data:object, [opt:object|null], [cb:function])
 
-see params details: [`data`](#params-data)
+see params details: [`data`](#params-data) [`opt`](#params-opt)
 
 ```js
 dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
@@ -469,9 +471,9 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
 ---
 
 <a name="insertReturningId"></a>
-**insertReturningId** (tbl:string, data:object, seqence:string, [cb:function])
+**insertReturningId** (tbl:string, data:object, seqence:string, [opt:object|null], [cb:function])
 
-see params details: [`data`](#params-data)
+see params details: [`data`](#params-data) [`opt`](#params-opt)
 
 Invoke INSERT operation with unique ID fetched from sequence and returns that ID (no SQL version).
 
@@ -490,7 +492,9 @@ dal.insertReturningId('test_01', {id: {type:'pk'}, text: 'test11'}, 'test_01_sid
 ---
 
 <a name="insertReturningIdSql"></a>
-**insertReturningIdSql** (sql:string, bind:object|Array, seqence:string, [cb:function])
+**insertReturningIdSql** (sql:string, bind:object|Array, seqence:string, [opt:object|null], [cb:function])
+
+see params details: [`opt`](#params-opt)
 
 Invoke INSERT operation with unique ID fetched from sequence and returns that ID (SQL version).
 
@@ -509,9 +513,9 @@ dal.insertReturningIdSql('INSERT INTO test_01 (id, text) VALUES (:0, :1)', [{typ
 ---
 
 <a name="update"></a>
-**update** (tbl:string, data:object, where:Array|object, [cb:function])
+**update** (tbl:string, data:object, where:Array|object, [opt:object|null], [cb:function])
 
-see params details: [`where`](#params-where) [`data`](#params-data)
+see params details: [`where`](#params-where) [`data`](#params-data) [`opt`](#params-opt)
 
 Invoke UPDATE on specified table.
 Only fields in given data parameter object (simple key:value) will be modified for rows selected by given where parameter.
@@ -531,9 +535,9 @@ dal.update('test_01', {text: 'test11-modified'}, ['id = ?', 11], function(err, r
 ---
 
 <a name="del"></a>
-**del**  (tbl:string, where:Array|object, [cb:function])
+**del**  (tbl:string, where:Array|object, [opt:object|null], [cb:function])
 
-see params details: [`where`](#params-where)
+see params details: [`where`](#params-where) [`opt`](#params-opt)
 
 Delete record or records.
 
@@ -716,30 +720,22 @@ const order_v2 = ['field1', 'field2 DESC'];
 
 
 ```js
+const conn = await dal.getDbConnection();
+
 const opt = {
     outFormat: 'array', // return results as Array instead of object (object like JSON is default behavior for this library)
-    limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with curent row number
+    limit: 10,          // enable pagination and sets row number per page, also adds to results field "n__" (or last in array) with current row number
     page: 5,            // page number to fetch,
-    totalCount: true,   // adds to resalts field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
+    totalCount: true,   // adds to results field "c__" (or last in array) with all query rows count (summarize all records in all pages for given query)
     fetchClobs: true,   // auto fetch all data for CLOB-s (works with:  selectOneRow, selectOneRowSql, selectAllRows and selectAllRowsSql)
     sessionCtx: [{      // automatically sets session context attributes values of current connection
         ctxProcedureName: 'set_ctx_node_dal',
         ctxAttribute: 'current_id',
         ctxValue: '10'
-    }]
+    }],
+    connection: conn,   // pass connection to reuse, this connection will not be release after query execute so You have to release it manually!
+    dbmsOutput: true    // only for runProcedure - fetch all DBMS_OUTPUT.PUT_LINE from procedure and put that string as last callback argument
 }
 ```
 [`API`](#API)
 
-
-<a name="params-opt-proc"></a>
-#### optProc
-
-
-```js
-const optProc = {
-    dbmsOutput: true, // fetch all DBMS_OUTPUT.PUT_LINE from procedure and put that string as last callback argument
-    sessionCtx: []    // see: opt.sessionCtx
-}
-```
-[`API`](#API)

@@ -9,6 +9,7 @@ const
     should     = require('should'),
     async      = require('async'),
     conf       = require('./config').oracle,
+    oracledb   = require('oracledb'),
     dalFactory = require('../lib/dalFactory'),
     MyErrorOrgin = MyError;
 
@@ -718,6 +719,57 @@ describe('Data Access Layer common tests', function() {
                 .then(result => {
                     should.equal(result.length, 1);
                     should.deepEqual(result[0], { ID:10, TEXT: "text_10" });
+                    done();
+                })
+                .catch(done);
+        });
+    });
+
+    describe('test connection reuse', function() {
+        let conn,
+            sql = `SELECT 123 FROM dual WHERE Sys_Context('CTX_NODE_DAL', 'cid')=:0`;
+
+        it('should get connection', done => {
+            dal.getDbConnection()
+                .then(c => {
+                    should(c).be.instanceOf(oracledb.Connection);
+                    conn = c;
+                    done();
+                })
+                .catch(done)
+        });
+
+        it('should remember context variable reusing connection', done => {
+            dal.runProcedure('set_ctx_node_dal', { p_name: 'cid', p_val: 100 }, { connection: conn })
+                .then(() => { done(); })
+                .catch(done);
+        });
+
+        it('connection should not be released after reuse', () => {
+            should(conn).be.instanceOf(oracledb.Connection);
+        });
+
+        it('should get value if connection reuse', done => {
+            dal.selectOneValueSql(sql, [100], { connection: conn })
+                .then(v => {
+                    should.equal(v, 123);
+                    done();
+                })
+                .catch(done);
+        });
+
+        it('should not get value if connection not reuse', done => {
+            dal.selectOneValueSql(sql, [100])
+                .then(v => {
+                    should.equal(v, null);
+                    done();
+                })
+                .catch(done);
+        });
+
+        it('should release connection', done => {
+            conn.release()
+                .then(() => {
                     done();
                 })
                 .catch(done);

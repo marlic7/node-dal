@@ -1,6 +1,6 @@
 {
   "name": "node-dal",
-  "version": "2.6.3",
+  "version": "2.6.4",
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {

@@ -471,7 +471,7 @@ dal.insert('test_01', {id: 999, text: 'simple'}, function(err, result) {
 ---
 
 <a name="insertReturningId"></a>
-**insertReturningId** (tbl:string, data:object, seqence:string, [opt:object|null], [cb:function])
+**insertReturningId** (tbl:string, data:object, sequence:string, [opt:object|null], [cb:function])
 
 see params details: [`data`](#params-data) [`opt`](#params-opt)
 
@@ -492,7 +492,7 @@ dal.insertReturningId('test_01', {id: {type:'pk'}, text: 'test11'}, 'test_01_sid
 ---
 
 <a name="insertReturningIdSql"></a>
-**insertReturningIdSql** (sql:string, bind:object|Array, seqence:string, [opt:object|null], [cb:function])
+**insertReturningIdSql** (sql:string, bind:object|Array, sequence:string, [opt:object|null], [cb:function])
 
 see params details: [`opt`](#params-opt)
 

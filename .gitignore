@@ -1,7 +1,6 @@
 node_modules
 *.log
-.idea/*
-!.idea/runConfigurations
+.idea
 npm-debug.log
 temp
 tmp

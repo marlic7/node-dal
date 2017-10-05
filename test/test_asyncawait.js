@@ -4,8 +4,6 @@ require("./lib/my-error");
 const
     _          = require('lodash'),
     should     = require('should'),
-    async      = require('asyncawait/async'),
-    await      = require('asyncawait/await'),
     conf       = require('./config').oracle,
     dalFactory = require('../lib/dalFactory');
 
@@ -35,11 +33,11 @@ describe('Data Access Layer promises with asyncawait tests', function() {
                         });
                     });
                 },
-                dropTabs = async(() => {
-                    return await(_.map(tbls, tbl => {
+                dropTabs = async () => {
+                    return await (_.map(tbls, tbl => {
                         return querySqlSilent(`DROP TABLE ${tbl}`);
                     }));
-                });
+                };
 
             dropTabs()
                 .then(out => {
@@ -51,28 +49,28 @@ describe('Data Access Layer promises with asyncawait tests', function() {
         });
 
         it('should create new tables', done => {
-            const createTabs = async(() => {
-                return await(_.map(tbls, tbl => {
+            const createTabs = async () => {
+                return await _.map(tbls, tbl => {
                     return dal.querySql(`CREATE TABLE ${tbl} (text VARCHAR2(20))`);
-                }));
-            });
+                });
+            };
 
             createTabs()
                 .then(out => {
                     should.equal(out.length, 5);
                     done();
                 })
-                .catch(err => { done(err) });
+                .catch(err => { done(err); });
         });
 
         it('should async code run like sync', done => {
-            const doJob = async(() => {
+            const doJob = async () => {
                 const
-                    tabCnt1 = await(dal.selectOneValueSql("SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'")),
-                    tabCnt2 = await(dal.selectOneValueSql({ sql: "SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'" }));
+                    tabCnt1 = await dal.selectOneValueSql("SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'"),
+                    tabCnt2 = await dal.selectOneValueSql({ sql: "SELECT count(*) FROM user_tables WHERE table_name LIKE 'TESTP%'" });
 
                 return [tabCnt1, tabCnt2];
-            });
+            };
 
             doJob()
                 .then(out => {

@@ -23,21 +23,22 @@ describe('Data Access Layer promises with asyncawait tests', function() {
     });
 
     describe('prepare DB structure', function() {
+        this.timeout(5000);
 
         it('should remove tables silently', done => {
-            const
-                querySqlSilent = query => {
-                    return new Promise(resolve => {
-                        dal.querySql(query, [], (err, result) => {
-                            resolve(result);
-                        });
+            const querySqlSilent = query => {
+                return new Promise(resolve => {
+                    dal.querySql(query, [], (err, result) => {
+                        resolve(result);
                     });
-                },
-                dropTabs = async () => {
-                    return await (_.map(tbls, tbl => {
-                        return querySqlSilent(`DROP TABLE ${tbl}`);
-                    }));
-                };
+                });
+            };
+
+            const dropTabs = async () => {
+                return await (_.map(tbls, tbl => {
+                    return querySqlSilent(`DROP TABLE ${tbl}`);
+                }));
+            };
 
             dropTabs()
                 .then(out => {

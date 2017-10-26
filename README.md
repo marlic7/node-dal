@@ -1,4 +1,4 @@
-# node-dal version 2.5.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.7.0 (Node.js Database Abstraction Layer)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
 
@@ -136,6 +136,8 @@ dal.querySql('SELECT ...', [15])
 * [`selectOneClobValueSql`](#selectOneClobValueSql)
 * [`selectAllRows`](#selectAllRows)
 * [`selectAllRowsSql`](#selectAllRowsSql)
+* [`getSqlForSelectAllRows`](#getSqlForSelectAllRows)
+* [`getSqlForSelectAllRowsSql`](#getSqlForSelectAllRowsSql)
 * [`querySql`](#querySql)
 * [`runProcedure`](#runProcedure)
 * [`insert`](#insert)
@@ -365,7 +367,7 @@ dal.selectAllRows('test_01', null, null, null, { outFormat: 'array', limit:10, p
 see params details: [`opt`](#params-opt)
 
 ```js
-dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'], function(err, result) {
+dal.selectAllRowsSql('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'], function(err, result) {
     if(err) {
         console.error(err.message);
         return;
@@ -375,13 +377,37 @@ dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T']
 });
 
 // with promise
-dal.selectAllRows('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'])
+dal.selectAllRowsSql('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T'])
     .then(result => {
         console.log(result);
     })
     .catch(err => {
         console.error(err.message);
     });
+```
+[`API`](#API)
+
+---
+
+<a name="getSqlForSelectAllRows"></a>
+**getSqlForSelectAllRows** (tbl:string, [fields:Array|null], [where:Array|object|null], [order:Array|string|null], [opt:object|null])
+
+see params details: [`fields`](#params-fields) [`where`](#params-where) [`order`](#params-order) [`opt`](#params-opt)
+
+```js
+const { sql } = dal.getSqlForSelectAllRows( { tbl: 'test_01', opt: { outFormat: 'array', limit:10, page:5 } });
+```
+[`API`](#API)
+
+---
+
+<a name="getSqlForSelectAllRowsSql"></a>
+**getSqlForSelectAllRowsSql** (sql:string, bind:object|Array, [opt:object|null])
+
+see params details: [`opt`](#params-opt)
+
+```js
+const { sql } = dal.getSqlForSelectAllRowsSql('SELECT * FROM test WHERE col_a = :0 AND col_b = :1', [1, 'T']);
 ```
 [`API`](#API)
 

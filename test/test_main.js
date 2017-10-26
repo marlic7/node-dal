@@ -425,6 +425,12 @@ describe('Data Access Layer common tests', function() {
             });
         });
 
+        it('should get valid sql 1', done => {
+            const result = dal.getSqlForSelectAllRows('test_01', null, [], ['id']);
+            should.equal(result.sql, 'SELECT a.* FROM test_01 a  ORDER BY id');
+            done();
+        });
+
         it('should get all rows for test_04 (table with 3 CLOB fields)', done => {
             dal.selectAllRows('test_04', null, [], ['id'], { fetchClobs: true }, (err, result) => {
                 should.not.exist(err);
@@ -443,6 +449,13 @@ describe('Data Access Layer common tests', function() {
             });
         });
 
+        it('should get valid sql 2', done => {
+            const result = dal.getSqlForSelectAllRows('test_04', null, [], ['id'], { fetchClobs: true });
+            should.equal(result.sql, 'SELECT a.* FROM test_04 a  ORDER BY id');
+            should.equal(result.opt.fetchClobs, true);
+            done();
+        });
+
         it('should get all rows for test_01 (outFormat=array)', done => {
             dal.selectAllRows('test_01', null, [], null, { outFormat: 'array' }, (err, result) => {
                 should.not.exist(err);
@@ -450,8 +463,6 @@ describe('Data Access Layer common tests', function() {
                 done();
             });
         });
-
-
 
         it('should get all rows for page 1 test_01', done => {
             // unfortunately results differs for dbVersions
@@ -470,6 +481,17 @@ describe('Data Access Layer common tests', function() {
             }
         });
 
+        it('should get valid sql 3 (page 1)', done => {
+            const result = dal.getSqlForSelectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2});
+            if(dal.getCfg().dbVer >= '12') {
+                should.equal(result.sql, 'SELECT a.* FROM test_01 a  ORDER BY id DESC OFFSET 0 ROWS FETCH NEXT 2 ROWS ONLY');
+            } else {
+                // todo: replace valid expected
+                should.equal(result.sql, 'SELECT a.* FROM test_01 a  ORDER BY id DESC OFFSET 0 ROWS FETCH NEXT 2 ROWS ONLY');
+            }
+            done();
+        });
+
         it('should get all rows for page 2 test_01', done => {
             // unfortunately results differs for dbVersions
             if(dal.getCfg().dbVer >= '12') {
@@ -485,6 +507,17 @@ describe('Data Access Layer common tests', function() {
                     done();
                 });
             }
+        });
+
+        it('should get valid sql 4 (page 2)', done => {
+            const result = dal.getSqlForSelectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2, page: 2, totalCount: true});
+            if(dal.getCfg().dbVer >= '12') {
+                should.equal(result.sql, 'SELECT a.*, Count(1) OVER () AS cnt__ FROM test_01 a  ORDER BY id DESC OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY');
+            } else {
+                // todo: replace valid expected
+                should.equal(result.sql, 'SELECT a.* FROM test_01 a  ORDER BY id DESC OFFSET 0 ROWS FETCH NEXT 2 ROWS ONLY');
+            }
+            done();
         });
 
         it('should get all rows for page 2 test_01 SQL version', done => {
@@ -504,7 +537,20 @@ describe('Data Access Layer common tests', function() {
             }
         });
 
-        it('should get all rows for page 2 test_01', done => {
+        it('should get valid sql 5 (page 2 SQL)', done => {
+            const result = dal.getSqlForSelectAllRowsSql('SELECT t.* FROM test_01 t ORDER BY id DESC', [], {outFormat: 'array', limit: 2, page: 2, totalCount: true});
+            if(dal.getCfg().dbVer >= '12') {
+                should.equal(result.sql, 'SELECT t.*, Count(1) OVER () AS cnt__ FROM test_01 t ORDER BY id DESC\n' +
+                                         'OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY');
+            } else {
+                // todo: replace valid expected
+                should.equal(result.sql, 'SELECT t.*, Count(1) OVER () AS cnt__ FROM test_01 t ORDER BY id DESC\n' +
+                                         'OFFSET 2 ROWS FETCH NEXT 2 ROWS ONLY');
+            }
+            done();
+        });
+
+        it('should get 0 rows for page 4 test_01', done => {
             dal.selectAllRows('test_01', null, [], ['id DESC'], {outFormat: 'array', limit: 2, page: 4}, (err, result) => {
                 should.not.exist(err);
                 should.deepEqual(result, []);
@@ -678,7 +724,7 @@ describe('Data Access Layer common tests', function() {
                             cb(new Error(err));
                             return;
                         }
-                        should.equal(result, "yyyy-mm-dd");
+                        should.equal(result.toLowerCase(), "yyyy-mm-dd");
                         cb();
                     });
                 },

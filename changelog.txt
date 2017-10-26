@@ -1,8 +1,14 @@
 
-n.n.n / 2017-10-05
+n.n.n / 2017-10-26
 ==================
 
 
+
+2.7.0 / 2017-10-26
+==================
+
+  * added new methods: getSqlForSelectAllRows, getSqlForSelectAllRowsSql
+  * changelog refresh
 
 2.6.6 / 2017-10-05
 ==================

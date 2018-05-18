@@ -1,4 +1,4 @@
-# node-dal version 2.7.0 (Node.js Database Abstraction Layer)
+# node-dal version 2.7.1 (Node.js Database Abstraction Layer)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
 

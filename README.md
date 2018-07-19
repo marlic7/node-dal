@@ -1,4 +1,4 @@
-# node-dal version 2.7.1 (Node.js Database Abstraction Layer)
+# node-dal version 2.7.2 (Node.js Database Abstraction Layer)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
 
@@ -16,7 +16,7 @@ It purpose is to be:
 8. Easy to extend (adapter writers very welcome)
 
 Supported databases:
-* Oracle (oracledb driver v1.12.x)
+* Oracle (oracledb driver)
 
 This library is not:
 * ORM

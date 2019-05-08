@@ -1,4 +1,4 @@
-# node-dal version 2.7.2 (Node.js Database Abstraction Layer)
+# node-dal version 2.7.3 (Node.js Database Abstraction Layer)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
 
@@ -94,8 +94,8 @@ npm run testperf
 
 Library was successfully tested with:
 - DB: Oracle 12c EE
-- Node.js: v6.2.1
-- OS: Ubuntu 16.04
+- Node.js: v8.9.1
+- OS: Ubuntu 18.04
 
 ## API
 

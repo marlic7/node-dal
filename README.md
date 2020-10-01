@@ -1,4 +1,4 @@
-# node-dal version 2.7.3 (Node.js Database Abstraction Layer)
+# node-dal version 3.0.0 (Node.js Database Abstraction Layer)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
 
@@ -27,7 +27,7 @@ This library is not:
 
 ```bash
 npm install --save node-dal
-npm install --save oracledb # or any other supported db driver
+npm install --save oracledb@5.0.0 # or any other supported db driver
 ```
 
 ### Initialization
@@ -94,7 +94,7 @@ npm run testperf
 
 Library was successfully tested with:
 - DB: Oracle 12c EE
-- Node.js: v8.9.1
+- Node.js: v12.16.1
 - OS: Ubuntu 18.04
 
 ## API

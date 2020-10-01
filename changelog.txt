@@ -1,7 +1,23 @@
 
-n.n.n / 2018-07-19
+n.n.n / 2020-10-01
 ==================
 
+
+
+3.0.0 / 2020-10-01
+==================
+
+  * new release @3.0.0 with node@12 support
+  * Update dalFactory.js
+  * changed outFormat
+  * Update devDependencies
+  * upgrade to oracledb @5.0.0
+  * @2.7.3, update dependencies (oracledb@3.1.2), add TODO.md
+
+2.7.2 / 2018-07-19
+==================
+
+  * @2.7.2, bump oracledb to @2.3.0
   * better error handling in few places
 
 2.7.1 / 2018-05-18

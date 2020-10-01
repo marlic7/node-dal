@@ -4,7 +4,7 @@
   "description": "Node.js Database Abstraction Layer",
   "main": "lib/dalFactory.js",
   "scripts": {
-    "test": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' npx mocha -R spec --timeout 15000 ./test/",
+    "test": "NLS_LANG=POLISH_POLAND.AL32UTF8 NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' npx mocha -R spec --timeout 15000 ./test/",
     "testperf": "NLS_DATE_FORMAT='yyyy-mm-dd' TZ='00:00' npx mocha -R spec --timeout 150000 ./test/perf/",
     "changelog": "git changelog -a -n -x > changelog.txt",
     "eslint": "eslint ./libs ./tests"
@@ -37,10 +37,8 @@
     "semver": "^5.7.0"
   },
   "devDependencies": {
-    "fast-stats": "0.0.3",
-    "mocha": "^4.1.0",
-    "node-string-pad": "0.0.4",
-    "oracledb": "^3.1.2",
-    "should": "^11.1.2"
+    "mocha": "^8.1.3",
+    "oracledb": "^5.0.0",
+    "should": "^13.2.3"
   }
 }

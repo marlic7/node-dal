@@ -22,6 +22,6 @@ module.exports = {
             //nls_date_format: 'yyyy-mm-dd' // better set it in env (NLS_DATE_FORMAT='yyyy-mm-dd')!
         },
         dbVer: '12',
-        outFormat: 'object' // array/object
+        outFormat: 'out_format_object', // array/object/out_format_array/out_format_object
     }
 };

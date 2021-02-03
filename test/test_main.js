@@ -343,8 +343,13 @@ describe('Data Access Layer common tests', function() {
 
         it('should get current date', done => {
             dal.selectOneRowSql("SELECT To_Char(sysdate, 'yyyy-mm-dd') dat FROM dual", [], (err, result) => {
+                const d = new Date();
+                const YYYY = d.toLocaleDateString('pl', { year: 'numeric' });
+                const MM = d.toLocaleDateString('pl', { month: '2-digit' });
+                const DD = d.toLocaleDateString('pl', { day: '2-digit' });
+                const date = `${YYYY}-${MM}-${DD}`;
                 should.not.exist(err);
-                should.equal(result.DAT, (new Date()).toJSON().slice(0, 10));
+                should.equal(result.DAT, date);
                 done();
             });
         });

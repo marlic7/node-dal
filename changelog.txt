@@ -1,8 +1,16 @@
 
-n.n.n / 2020-10-01
+n.n.n / 2021-02-13
 ==================
 
 
+
+3.0.1 / 2021-02-03
+==================
+
+  * fix: scenario with own connection - disable autoCommit and conn release; @3.0.1
+  * fix: one test scenario: current date in proper locale set
+  * upgrade dependency: oracledb@~5.1.0
+  * changelog refresh
 
 3.0.0 / 2020-10-01
 ==================

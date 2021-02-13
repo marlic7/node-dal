@@ -1,4 +1,4 @@
-# node-dal version 3.0.0 (Node.js Database Abstraction Layer)
+# node-dal version 3.0.2 (Node.js Database Abstraction Layer)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/marlic7/node-dal/badge.svg)](https://snyk.io/test/github/marlic7/node-dal)
 
@@ -27,7 +27,7 @@ This library is not:
 
 ```bash
 npm install --save node-dal
-npm install --save oracledb@5.0.0 # or any other supported db driver
+npm install --save oracledb@5.1.0 # or any other supported db driver
 ```
 
 ### Initialization

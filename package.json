@@ -28,7 +28,7 @@
     "url": "https://github.com/marlic7/node-dal.git"
   },
   "dependencies": {
-    "async": "^2.6.2",
+    "async": "^3.2.2",
     "bluebird": "^3.5.4",
     "find-up": "^2.1.0",
     "fn-params-parser": "^1.0.1",
